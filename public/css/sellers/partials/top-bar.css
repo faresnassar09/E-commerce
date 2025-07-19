@@ -1,0 +1,131 @@
+/* توب بار: تصميم شريط العنوان */
+.topbar {
+    margin-top:-25px ;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.topbar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* الفريم المحيط بالصورة */
+.topbar .logo .image-frame {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #fff; /* حواف بيضاء حول الصورة */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.topbar .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* لضبط الصورة داخل الفريم */
+    border-radius: 50%;
+}
+
+.topbar .nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.topbar .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.topbar .nav-links a:hover {
+    background-color: #444;
+}
+
+.topbar .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.topbar .user-info span {
+    font-size: 16px;
+}
+
+.topbar .user-info button {
+    margin-right:15px ;
+
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.topbar .user-info button:hover {
+    background-color: #c0392b;
+}
+
+/* إخفاء القائمة الفرعية بشكل افتراضي */
+/* تصميم القائمة المنسدلة */
+.dropdown-menu {
+    display: none; /* مخفية افتراضيًا */
+    position: absolute;
+    top: 60px; /* أسفل الصورة */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #444;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 10px 0;
+    list-style: none; /* إزالة التنسيق الافتراضي للقائمة */
+    width: 150px;
+    text-align: center; /* محاذاة النصوص داخل القائمة */
+}
+
+/* عناصر القائمة */
+.dropdown-menu li {
+    padding: 10px 15px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dropdown-menu li:hover {
+    background-color: #555;
+}
+
+/* محاذاة الإطار والصورة */
+.image-frame {
+    cursor: pointer; /* جعل الصورة قابلة للنقر */
+    position: relative;
+}
+
+.logo {
+    position: relative;
+}
+
+.dropdown-menu .admin_mail {
+    color: white;
+    padding: 10px;
+    margin: 0;
+    font-size: 14px;
+    word-wrap: break-word; /* كسر النص الطويل */
+    word-break: break-word; /* إضافة كسر للكلمات */
+    overflow-wrap: break-word; /* يسمح بكسر النص الطويل */
+    max-width: 100%;}

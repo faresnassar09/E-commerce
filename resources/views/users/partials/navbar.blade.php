@@ -34,7 +34,7 @@
 </script>
 
 @if(auth()->user())
-            <div class="md:hidden" id='test'>
+            <div   id='test'>
             <button onclick="document.getElementById('side').classList.toggle('hidden')">
                 <i class="fas fa-bars text-2xl"> القائمة ☰</i>
             </button>

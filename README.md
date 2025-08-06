@@ -55,19 +55,18 @@ This is a **full-featured backend e-commerce platform** built with **Laravel**, 
 
 ## 🔧 Setup Instructions
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/your-username/e-commerce.git
-cd e-commerce
+git clone https://github.com/faresnassar09/E-commerce.git
 
-# 2. Install dependencies
+cd E-commerce
+
 composer install
 
-# 3. Configure .env
+#init Environment
 cp .env.example .env
+
 php artisan key:generate
 
-# 4. Set up the database
+#migrate tables and columns
 php artisan migrate
 
 # 5. Start the server

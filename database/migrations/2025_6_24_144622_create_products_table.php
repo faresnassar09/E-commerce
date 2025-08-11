@@ -31,7 +31,7 @@ return new class extends Migration
 
             $table->string("name");
             $table->string("description",1000);
-            $table->float("discount")->nullable();
+            $table->float("discount")->nullable()->default(0);
             $table->integer("available_quantity");
             $table->integer("sold_quantity")->default(0);
             $table->float("price");

@@ -23,7 +23,7 @@ This is a **full-featured backend e-commerce platform** built with **Laravel**, 
 - 📸 Product gallery with support for multiple images
 - 🔐 **Authentication** with Laravel Breeze
 - 📡 Built using **Livewire** for dynamic UX
-- 📂 **PDF generation** for order summaries or invoices
+- 🌐 *Localization* support English And Arabic 
 - 📁 File hosting & management for product documents
 - ⚙️ Role-based access with Policies & Gates
 - ✅ Clean, structured codebase with logging & exception handling

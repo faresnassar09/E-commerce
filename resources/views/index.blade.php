@@ -53,10 +53,10 @@
 
                     <div class="mt-2 text-right">
                         @if($product->discount)
-                            <p class="text-sm text-red-500 line-through">{{ number_format($product->price, 2) }} {{ __('messages.egp') }}</p>
-                            <p class="text-green-500 font-bold">{{ number_format($product->price - $product->discount, 2) }} {{ __('messages.egp') }}</p>
+                            <p class="text-sm text-red-500 line-through">{{ number_format($product->price, 2) }} {{ __('messages.aed') }}</p>
+                            <p class="text-green-500 font-bold">{{ number_format($product->price - $product->discount, 2) }} {{ __('messages.aed') }}</p>
                         @else
-                            <p class="text-green-600 font-semibold">{{ number_format($product->price, 2) }} {{ __('messages.egp') }}</p>
+                            <p class="text-green-600 font-semibold">{{ number_format($product->price, 2) }} {{ __('messages.aed') }}</p>
                         @endif
                     </div>
 

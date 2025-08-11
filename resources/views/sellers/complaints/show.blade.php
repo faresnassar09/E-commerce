@@ -1,15 +1,13 @@
-@extends('sellers.master')
-
-@section('title', 'عرض الشكوى')
-
+@extends('sellers.partials.app')
+@section('title', __('messages.complaint_details_title'))
 @section('content')
+
 <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow mt-6">
 
-
-<div class="mb-6 border-b pb-4">
+    <div class="mb-6 border-b pb-4">
         <h2 class="text-xl font-bold text-gray-800 mb-2">{{ $ticket->subject }}</h2>
         <p class="text-sm text-gray-600 mb-3">{{ $ticket->message }}</p>
-        <p class="text-xs text-gray-500">بتاريخ {{ $ticket->created_at->format('Y-m-d H:i') }}</p>
+        <p class="text-xs text-gray-500">{{ __('messages.on_date') }} {{ $ticket->created_at->format('Y-m-d H:i') }}</p>
 
         @if($ticket->images && count($ticket->images))
             <div class="mt-3 flex flex-wrap gap-3">
@@ -27,7 +25,7 @@
                     $isSeller = $reply->sender_type === 'seller';
                     $bubbleColor = $isSeller ? 'bg-blue-100 text-right' : 'bg-gray-100 text-left';
                     $alignment = $isSeller ? 'justify-end pr-4' : 'justify-start pl-4';
-                    $senderLabel = $isSeller ? 'البائع' : 'الإدارة';
+                    $senderLabel = $isSeller ? __('messages.seller_label') : __('messages.admin_label');
                     $tagColor = $isSeller ? 'bg-blue-200 text-blue-800' : 'bg-gray-300 text-gray-800';
                 @endphp
 
@@ -58,7 +56,7 @@
         @csrf
 
         <div class="flex flex-col sm:flex-row gap-4 items-center">
-            <input type="text" name="message" placeholder="اكتب ردك هنا..." required
+            <input type="text" name="message" placeholder="{{ __('messages.write_your_reply') }}..." required
                    class="flex-1 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
 
             <input type="file" name="images[]" accept="image/*"
@@ -66,10 +64,9 @@
 
             <button type="submit"
                     class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded">
-                إرسال
+                {{ __('messages.send_button') }}
             </button>
         </div>
     </form>
 </div>
 @endsection
-

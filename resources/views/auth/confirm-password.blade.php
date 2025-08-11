@@ -1,14 +1,13 @@
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('هذه منطقة آمنة في التطبيق. يرجى تأكيد كلمة المرور قبل المتابعة.') }}
+        {{ __('messages.secure_area') }}
     </div>
 
     <form method="POST" action="{{ route('password.confirm') }}">
         @csrf
 
-        <!-- Password -->
         <div>
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('messages.password')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
@@ -20,7 +19,7 @@
 
         <div class="flex justify-end mt-4">
             <x-primary-button>
-                {{ __('Confirm') }}
+                {{ __('messages.confirm') }}
             </x-primary-button>
         </div>
     </form>

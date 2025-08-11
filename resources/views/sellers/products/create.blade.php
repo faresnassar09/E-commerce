@@ -1,9 +1,7 @@
 @extends('sellers.partials.app')
-@section('title', $title)
+@section('title', __('messages.add_product_title'))
 @section('content')
 
-
- 
 <form action="{{ route('seller.product.store') }}" method="POST" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white p-4 rounded-lg shadow-md mt-6">
     @csrf
 
@@ -47,7 +45,7 @@
         </div>
 
         <div>
-            <label class="block mt-3 mb-1 font-semibold">{{__('messages.much')}}</label>
+            <label class="block mt-3 mb-1 font-semibold">{{__('messages.quantity')}}</label>
             <input type="number" name="quantity" class="w-full p-1 border rounded @error('quantity') border-red-500 @enderror" value="{{ old('quantity') }}">
             @error('quantity')
                 <p class="text-red-500 text-xs">{{ $message }}</p>
@@ -62,12 +60,10 @@
             @enderror
         </div>
 
-        <!-- هنا الفئة جنب الخصم -->
         <div>
             <label class="block mt-3 mb-1 font-semibold">{{__('messages.categories')}}</label>
-            <select name="category_id" class="w-full p-1 border rounded @error('category_id') border-red-500 @enderror" value="{{ old('category_id') }}">
-        <option value=""> choose category</option>
-  
+            <select name="category_id" class="w-full p-1 border rounded @error('category_id') border-red-500 @enderror">
+                <option value="">{{ __('messages.choose_category') }}</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
@@ -79,23 +75,23 @@
     </div>
 
     <label class="block mt-3 mb-1 font-semibold">{{ __('messages.images') }} </label>
-<input
-    type="file"
-    name="images[]"
-    multiple
-    accept="image/*"
-    class="w-full p-1 border rounded @error('images') border-red-500 @enderror"
-    id="image-upload">
+    <input
+        type="file"
+        name="images[]"
+        multiple
+        accept="image/*"
+        class="w-full p-1 border rounded @error('images') border-red-500 @enderror"
+        id="image-upload">
 
-@error('images')
-    <p class="text-red-500 text-xs">{{ $message }}</p>
-@enderror
-
-@foreach ($errors->get('images.*') as $messages)
-    @foreach ($messages as $message)
+    @error('images')
         <p class="text-red-500 text-xs">{{ $message }}</p>
+    @enderror
+
+    @foreach ($errors->get('images.*') as $messages)
+        @foreach ($messages as $message)
+            <p class="text-red-500 text-xs">{{ $message }}</p>
+        @endforeach
     @endforeach
-@endforeach
 
 
     <div id="image-preview" class="mt-3 grid grid-cols-3 gap-2"></div>

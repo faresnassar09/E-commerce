@@ -2,11 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Facades\AuthSeller;
-use App\Jobs\Seller\SendOrderStatusUpdateMailJob as SellerJobMail;
-use App\Jobs\User\SendOrderStatusUpdateMailJob  as UserJobMail;
-use App\Models\Order\Order;
-use App\Models\User\Cart;
+use App\Services\EmailService;
+use App\Services\NotificationService;
+use App\Services\User\CartItemService;
+use App\Services\User\LoggingService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -25,30 +24,25 @@ class CartItems extends Component
 
     public function mount(): void
     {
-        $this->loadCartItems();
+        $this->cartItems =  app(CartItemService::class)->loadCartItems();  
         $this->getUserAddresses(null);
-    }
 
+
+    }
 
     public function getUserAddresses($selectedAddress)
     {
 
-        $this->userAddresses = Auth::user()->addresses()->with('city', 'area')->get();
+        $this->userAddresses = app(CartItemService::class)->getUserAddresses();
 
         $this->selectedAddress = $selectedAddress ?? null;
     }
 
-    public function getTotalProperty(): float
-    {
-        return Cart::whereIn('id', $this->selectedItems)->get()->sum(function ($item) {
-            $qty = $this->quantities[$item->id] ?? $item->quantity;
-            return ($item->product->price - $item->product->discount) * $qty;
-        });
-    }
 
     public function deleteItem(int $id): void
     {
-        Cart::destroy($id);
+        app(CartItemService::class)->deleteItem($id);
+
         $this->loadCartItems();
     }
 
@@ -57,116 +51,79 @@ class CartItems extends Component
 
         if (!$this->selectedAddress){
 
-            return back()->with('faildMessage', 'يجب ان تحدد عنوان اذا لم تضف عنوان بعد اضغط علي اضافة عنوان');
+            return back()->with('failed', __('notifications.should_choose_address'));
                     
         }
-        if (!$this->isValidSelection()) {
-            return back()->with('faildMessage', 'عندما تحدد عنصر يجب ان تختار الكمية و عندما تختار كمية يجب ان تحدد عنصر');
-        }
-
-        if (!$this->isValidSelection()) {
-            return back()->with('faildMessage', 'عندما تحدد عنصر يجب ان تختار الكمية و عندما تختار كمية يجب ان تحدد عنصر');
+        if (!app(CartItemService::class)->isValidSelection($this->selectedItems,$this->quantities)) {
+            return back()->with('failed',__('notifications.inputs_not_match'));
         }
 
         if (!in_array($this->paymentMethod, ['cash', 'visa'])) {
-            Log::channel('user')->error("Payment method not selected", ['user_id' => auth()->id()]);
-            session()->flash('faildMessage', 'يجب تحديد طريقة الدفع');
-            return;
+            
+            app(LoggingService::class)->failed('no payment method chosen',[]);
+            
+            return back('failed', __('notifications.should_choose_payment_method'));
         }
 
-        $totalPrice = $this->getTotalProperty();
-        $order = $this->createOrder($totalPrice);
-        $this->processOrderItems($order);
+        $totalPrice = app(CartItemService::class)->getTotalProperty(
+            $this->selectedItems,
+            $this->quantities,
+        );
+
+        $data = [
+            'totalPrice' => $totalPrice,
+            'userAddress' => $this->selectedAddress,
+            'comment' => $this->comment,
+            'backupPhoneNumber' => $this->backupPhoneNumber,
+            'paymentMethod' => $this->paymentMethod,
+            'sellerId' => app(CartItemService::class)->getSellerId($this->selectedItems[0]),
+        ];
+
+        $order = app(CartItemService::class)->createOrder($data);
+
+        app(CartItemService::class)->processOrderItems(
+            
+            $this->selectedItems,
+            $this->quantities,
+            $order
+        );
 
         $user = Auth::user();
-        $sellerDetails = $order->load('seller')->seller->toArray();
+        $seller = $order->load('seller')->seller;
         $orderDetails = $order->load('items.product')->toArray();
+ 
+        app(NotificationService::class)->notifySellerOfOrderTracking(
+            $seller,
+            $user->name,
+            "طلب جديد",
+            "بطلب أوردر. راجع صفحة الطلبات الواردة."          
+        );
 
-        if (!$sellerDetails) {
-            Log::channel('user')->warning('No seller found for the order', ['user_id' => $user->id, 'order_id' => $order->id]);
-            return;
-        }
+        app(EmailService::class)->sendOrderUserTrakingMail(
 
+            $user,
+            $orderDetails,
+            $seller->phone_numbers,
+            'placed',
+        );
 
+        app(EmailService::class)->sendOrderSellerTrakingMail(
 
-        dispatch(new SellerJobMail($sellerDetails, $orderDetails, $order->getOrderEmailData(), 'placed'));
-        dispatch(new UserJobMail($order->getOrderEmailData(), $orderDetails, $sellerDetails['phone_numbers'], 'placed'));
-        AuthSeller::sendOrderNotifications($sellerDetails['id'], "طلب جديد", "قام العميل {$user->name} بطلب أوردر. راجع صفحة الطلبات الواردة.");
+            $seller->toArray(),
+            $orderDetails,
+            $order->getOrderEmailData(),
+            'placed',
+        );
 
-        return redirect()->route('user.orders.index')->with('success', 'لقد قمت بحجز الطلب بنجاح');
+        return redirect()->route('user.orders.index')->with('success',__('notifications.order_placed_successfully'));
     }
-
-    protected function isValidSelection(): bool
-    {
-        $valid = count($this->selectedItems) > 0 && count($this->selectedItems) === count($this->quantities);
-
-        if (!$valid) {
-            Log::channel('user')->error('Mismatch in selected items and quantities', [
-                'selected_items_count' => count($this->selectedItems),
-                'selected_items_quantity' => count($this->quantities),
-                'user_id' => auth()->id(),
-                'cart_items_ids' => $this->selectedItems,
-            ]);
-        }
-
-        return $valid;
-    }
-
-    
-
-    protected function createOrder(float $totalPrice): Order
-    {
-        return Order::create([
-            'user_id' => auth()->id(),
-            'user_address_id' => $this->selectedAddress,
-            'status' => 0,
-            'price' => $totalPrice,
-            'time_to_delevired' => now()->addDay(),
-            'comments' => $this->comment,
-            'backup_phone_number' => $this->backupPhoneNumber,
-            'payment_method' => $this->paymentMethod,
-            'seller_id' => $this->getSellerId(),
-            'order_number' => now()->format('YmdHis') . mt_rand(10000, 99999),
-        ]);
-    }
-
-    protected function processOrderItems(Order $order): void
-    {
-        foreach ($this->selectedItems as $itemId) {
-            $cartItem = Cart::with('product')->find($itemId);
-
-            if (!$cartItem || !$cartItem->product) {
-                continue;
-            }
-
-            $quantity = $this->quantities[$itemId];
-
-            $cartItem->product->decrement('available_quantity', $quantity);
-            $cartItem->product->increment('sold_quantity', $quantity);
-
-            $order->items()->create([
-                'product_id' => $cartItem->product->id,
-                'price' => ($cartItem->product->price - $cartItem->product->discount) * $quantity,
-                'quantity' => $quantity,
-            ]);
-        }
-    }
-
-    protected function getSellerId(): ?int
-    {
-        $cartItem = Cart::with('product.seller')->find($this->selectedItems[0]);
-        return $cartItem->product->seller->id ?? null;
-    }
-
-    protected function loadCartItems(): void
-    {
-        $this->cartItems = Cart::with('product.images')->where('user_id', auth()->id())->get();
-    }
-
 
     public function render()
     {
-        $this->total = $this->getTotalProperty();
+        $this->total = app(CartItemService::class)->getTotalProperty(
+            $this->selectedItems,
+            $this->quantities,
+        );
         return view('livewire.cart-items');
     }
 }

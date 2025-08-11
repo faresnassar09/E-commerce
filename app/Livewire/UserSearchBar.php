@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Product\Product;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class UserSearchBar extends Component

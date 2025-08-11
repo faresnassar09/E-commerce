@@ -22,10 +22,6 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        Send_Welcome_Message::class => [
-            Welcome_Message_Sender::class,
-        ],
-
         \Illuminate\Auth\Events\Login::class => [
             \App\Listeners\LogSuccessfulLogin::class,  
         ],  

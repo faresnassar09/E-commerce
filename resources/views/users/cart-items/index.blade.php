@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{ __('messages.cart_items') }}</title>
     @livewireStyles
 
 </head>
@@ -17,6 +17,7 @@
 
 
 <!--  we use livewire to manage cart items and place order -->
+  
 <livewire:cart-items />
 
 </body>

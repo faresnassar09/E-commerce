@@ -3,101 +3,102 @@
 namespace App\Livewire;
 
 use App\Facades\AuthSeller;
-use App\Jobs\Seller\SendOrderStatusUpdateMailJob as SellerJobMail;
-use App\Jobs\User\SendOrderStatusUpdateMailJob as UserJobMail;
-use App\Models\User\User;
-use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Support\Facades\Log;
+use App\Services\EmailService;
+use App\Services\Seller\LoggingService;
+use App\Services\Seller\OrderService;
 use Livewire\Component;
 
 
 class ChangeOrderStatus extends Component
 {
- 
+
     public $orderId;
 
-public function mont($orderId){
+    public function mont($orderId)
+    {
 
-    $this->orderId = $orderId;
-
-}
-
-
-
-public function changeStatus($status){
-
-
-    $order = $this->findOrder();
-
-    if(!$order){
-
-        Log::channel('seller')->error('order no found',[
-
-            'seller_id' => Auth::guard('seller')->user()->id,
-            'order_id' => $this->orderId,
-
-        ]);
-
-
-        return redirect()->route('seller.orders.incaming')->with('failed','الاوردر غير موجود');
-
+        $this->orderId = $orderId;
     }
 
-   $order->update(['status' => $status , 'cancelled_at'=>now()  ]);
-
-    $user =$order->user()->first() ; 
-    $orderDetails = $order->load('items.product')->toArray();
-// dd($user);
-switch($status){
-
-case 0 : $status = 'الطلب قيد التجهيز';
-
-break;
-
-case 1 :
-    
-    $status = 'تم نقل الطلب لخانة الطلبات الموصلة';
-    dispatch(new SellerJobMail(AuthSeller::fullInfo()->toArray(),$orderDetails,$order->getOrderEmailData(),'delivered'));
-    dispatch(new UserJobMail($user->toArray(),$orderDetails,$order->seller->phone_numbers,'delivered'));
-
-break;
-
-case 2 :
-
-    $status = 'تم الغاء الطلب بنجاح';
-
-    dispatch(new SellerJobMail(AuthSeller::fullInfo()->toArray(),$orderDetails,$order->getOrderEmailData(),'cancelled'));
-    dispatch(new UserJobMail($user->toArray(),$orderDetails,$order->seller->phone_numbers,'cancelled'));
-
-break;
-
-case 3: $status = 'تم ارسال طلب الارجاع بنجاح';
-
-}
-
-Log::channel('seller')->error('order status has been changed',[
+    public function changeStatus($status)
+    {
 
 
-    'seller_id' => Auth::guard('seller')->user()->id,
-    'order_id' => $this->orderId,
-    'status' => $status,
-    
-]);
+        $order = app(OrderService::class)->findOrder($this->orderId);
 
-   return to_route('seller.orders.incoming')->with('success',$status);
+        if (!$order) {
+
+            app(LoggingService::class)->faild('order not found',[
+
+                'order_id' => $this->orderId,
+            ]);
+
+            return redirect()->route('seller.orders.incaming')->with('failed', 'الاوردر غير موجود');
+        }
+
+        app(OrderService::class)->changeOrderStatus($order, $status);
+
+        $orderDetails = $order->load('items.product')->toArray();
 
 
-      
-}
+        switch ($status) {
+
+            case 0:
+                $status = __('notifications.order_preparing');
+
+                break;
+
+            case 1:
+
+                $status = 'تم نقل الطلب لخانة الطلبات الموصلة';
+
+                app(EmailService::class)->SendOrderSellerTrakingMail(
+                    AuthSeller::fullInfo(),
+                    $orderDetails,
+                    $order->getOrderEmailData(),
+                    'delivered',
+                );
+
+                app(EmailService::class)->SendOrderUserTrakingMail(
+                    $order->getOrderEmailData(),
+                    $orderDetails,
+                    $order->seller->phone_numbers,
+                    'delivered',
+                );
+                break;
+
+            case 2:
+
+                $status = __('notifications.order_canceled');
+
+                app(EmailService::class)->SendOrderSellerTrakingMail(
+                    AuthSeller::fullInfo(),
+                    $orderDetails,
+                    $order->getOrderEmailData(),
+                    'caceled',
+                );
+
+                app(EmailService::class)->SendOrderUserTrakingMail(
+                    $order->getOrderEmailData(),
+                    $orderDetails,
+                    $order->seller->phone_numbers,
+                    'canceled',
+                );
+                break;
+
+            case 3:
+                $status = __('notifications.return_order_request');
+        }
 
 
-    private function findOrder() {
+        app(LoggingService::class)->success('order status has been changed',[
 
-        return Auth::guard('seller')->user()->orders()->find($this->orderId);
-        
-    }  
+            'order_id' => $this->orderId,
+            'status' => $status,
+        ]);
 
+        return to_route('seller.orders.incoming')->with('success', $status);
+    }
 
     public function render()
     {

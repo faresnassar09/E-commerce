@@ -36,7 +36,7 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function log(){
+    public function logs(){
 
         return $this->hasOne(OrderLog::class);
     }

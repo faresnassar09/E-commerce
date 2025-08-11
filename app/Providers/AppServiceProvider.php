@@ -10,29 +10,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
+use App\Services\EmailService;
+use Illuminate\Support\Facades\Crypt;
+
 ;
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+
     public function register(): void
     {
 
-
-
     }
+ 
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
-    {
-
+    {  
 
         Cashier::useCustomerModel(Seller::class);
         Cashier::calculateTaxes();
-
-
 }
 }

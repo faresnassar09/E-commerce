@@ -1,11 +1,8 @@
-@extends('sellers.master')
 
-@section('title', 'ملف البائع الشخصي')
-
+@extends('sellers.partials.app')
+@section('title', __('messages.seller_profile_title'))
 @section('content')
 
-
-<!-- Cropper.js CSS -->
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -81,14 +78,14 @@
     .crop-container {
     margin-top: 20px;
     text-align: center;
-    width: 300px;  /* العرض */
-    height: 300px; /* الارتفاع */
+    width: 300px; 
+    height: 300px; 
     overflow: hidden;
     position: relative;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 50%; /* جعل الإطار دائري */
-    border: 2px solid #ddd; /* إضافة إطار حول الأداة */
+    border-radius: 50%; 
+    border: 2px solid #ddd;
 }
 
 .cropper-img {
@@ -144,95 +141,74 @@
 </style>
 
 <div class="profile-container">
-    <!-- Header Section -->
     <div class="profile-header">
         <div class="image-container">
-        <img src="{{ Storage::url(auth()->guard('seller')->user()->profile_picture) }}" 
-        id="profile-image" 
-        class="profile-img"  
-        alt="User Image" 
-        />
+            <img src="{{ Storage::url(auth()->guard('seller')->user()->profile_picture) }}" 
+            id="profile-image" 
+            class="profile-img"   
+            alt="{{ __('messages.profile_picture_alt') }}" 
+            />
         </div>
-        <h2> {{$userName}} :: الاسم</h2>
+        <h2> {{ $sellerName }} :: {{ __('messages.name') }}</h2>
     </div>
 
-
-
-    <!-- Profile Form -->
     <div class="profile-content">
-        <form action="{{route('seller.profile.update')}}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('seller.profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <!-- Name -->
-
-                        <!-- Profile Picture -->
-                <div class="form-group">
-                <label for="image">تغيير الصورة الشخصية</label>
-                <input type="file" id="image" name="image"  onchange="showCropper(event)">
+            
+            <div class="form-group">
+                <label for="image">{{ __('messages.change_profile_picture') }}</label>
+                <input type="file" id="image" name="image" onchange="showCropper(event)">
             </div>
 
-            <!-- Crop Preview -->
             <div class="crop-container" style="display: none;">
                 <div>
                     <img id="cropper-image" class="cropper-img">
                 </div>
-                <button type="button" id="crop-button" class="crop-button">اقتصاص وحفظ</button>
+                <button type="button" id="crop-button" class="crop-button">{{ __('messages.crop_and_save') }}</button>
             </div>
 
-
             <div class="form-group">
-                <label for="name">تعديل الاسم</label>
-                <input type="text" id="name" name="name" value="{{$userName}}"
+                <label for="name">{{ __('messages.edit_name') }}</label>
+                <input type="text" id="name" name="name" value="{{ $sellerName }}"
                 class="@error('name') is-invalid @enderror"
                 >
             </div>
 
-
-
-        </div>
             @error('name')
-    <div class="alert alert-danger">{{ $message }}</div>
-@enderror 
-            <!-- Password -->
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror 
+            
             <div class="form-group">
-                <label for="password"> تغيير كلمة المرور </label>
-                <input type="password" id="password" name="password" placeholder="أدخل كلمة مرور جديدة"
+                <label for="password">{{ __('messages.change_password') }}</label>
+                <input type="password" id="password" name="password" placeholder="{{ __('messages.new_password_placeholder') }}"
                 class="@error('password') is-invalid @enderror"
                 >
             </div>
 
             @error('password')
-    <div class="alert alert-danger">{{ $message }}</div>
-@enderror 
-
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror 
 
             <div class="form-group">
-                <label for="password_confirmation">تاكيد كلمة المرور  </label>
-                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="أدخل كلمة مرور جديدة"
+                <label for="password_confirmation">{{ __('messages.confirm_password') }}</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="{{ __('messages.new_password_placeholder') }}"
                 class="@error('password_confirmation') is-invalid @enderror"
                 >
             </div>
 
             @error('password_confirmation')
-    <div class="alert alert-danger">{{ $message }}</div>
-@enderror
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
 
             <div class="form-actions">
-                <button type="submit" class="submit-btn">حفظ التعديلات</button>
-                <button type="reset" class="reset-btn">إعادة تعيين</button>
+                <button type="submit" class="submit-btn">{{ __('messages.save_changes') }}</button>
+                <button type="reset" class="reset-btn">{{ __('messages.reset') }}</button>
             </div>
-</div>
-
-
-            <!-- Actions -->
-
         </form>
     </div>
 </div>
-@endsection
 
-
-
-<!-- Cropper.js JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 <script>
     let cropper;
@@ -253,31 +229,31 @@
                 }
 
                 cropper = new Cropper(cropperImage, {
-    aspectRatio: 1,  // تحديد نسبة العرض إلى الارتفاع 1:1 (دائري)
-    viewMode: 2,     // حواف الصورة لا تتجاوز الإطار
-    autoCropArea: 0.8, // تحديد نسبة المساحة المبدئية للاقتصاص
-    responsive: true,  // التأكد من استجابة الأداة مع حجم الشاشة
-    movable: true,     // تمكين تحريك الصورة داخل الإطار
-    scalable: true,    // تمكين تكبير/تصغير الصورة
-    zoomable: true,    // تمكين التكبير/التصغير باستخدام العجلة
-    rotatable: true,   // تمكين التدوير
-});
-
+                    aspectRatio: 1,
+                    viewMode: 2,
+                    autoCropArea: 0.8,
+                    responsive: true,
+                    movable: true,
+                    scalable: true,
+                    zoomable: true,
+                    rotatable: true,
+                });
             };
             reader.readAsDataURL(file);
         }
     }
+
     document.getElementById('crop-button').addEventListener('click', function() {
-    const canvas = cropper.getCroppedCanvas({
-        width: 100,  // تحديد الحجم المقتص
-        height: 100, // تحديد الحجم المقتص
+        const canvas = cropper.getCroppedCanvas({
+            width: 100,
+            height: 100,
+        });
+
+        const croppedImage = canvas.toDataURL('image/png');
+        document.getElementById('profile-image').src = croppedImage;
+
+        const cropContainer = document.querySelector('.crop-container');
+        cropContainer.style.display = 'none';
     });
-
-    const croppedImage = canvas.toDataURL('image/png');
-    document.getElementById('profile-image').src = croppedImage;
-
-    const cropContainer = document.querySelector('.crop-container');
-    cropContainer.style.display = 'none'; // إخفاء أداة الاقتصاص بعد الحفظ
-});
-
 </script>
+@endsection

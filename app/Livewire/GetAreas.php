@@ -17,18 +17,7 @@ public function mount(){
 
 $this->cities = City::all();
 
-
 }   
-
-
-public function createUserAddress(){
-
-
-
-    
-}
- 
-
     public function render()
     {
         $this->areas = Area::where('city_id',$this->city_id)->get();

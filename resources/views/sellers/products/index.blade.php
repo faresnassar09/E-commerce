@@ -1,40 +1,31 @@
 @extends('sellers.partials.app')
-@section('title', $title)
+@section('title', __('messages.products_title'))
 @section('content')
 
-
-
 <div class="container mx-auto p-4 sm:p-6 max-w-screen-xl">
-    <!-- شبكة المنتجات -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
         @foreach($products as $product)
             <div class="bg-white shadow-md rounded-lg overflow-hidden p-2 relative border border-gray-300 max-w-full w-full transition-transform hover:scale-105">
                 
-                <!-- صورة المنتج -->
-                <img src="{{asset('images/'.$product->images?->first()?->path) ?? null}}" class="w-full h-32 object-cover rounded-t-md">
+                <img src="{{ Storage::url($product->images?->first()?->path) }}" alt="{{ $product->name }}" class="w-full h-32 object-cover rounded-t-md">
                 
-                <!-- اسم المنتج -->
                 <h2 class="text-sm font-bold text-gray-900 mt-2 text-center">{{ $product->name }}</h2>
                 
-                <!-- السعر والخصم -->
                 <div class="mt-1 text-center">
                     @if($product->discount > 0)
-                        <span class="text-gray-500 line-through text-sm block">{{ $product->price }} EG</span>
+                        <span class="text-gray-500 line-through text-sm block">{{ $product->price }} {{__('messages.currency')}}</span>
                     @endif
-                    <span class="text-black font-semibold text-sm">{{ $product->price - $product->discount }} EG</span>
+                    <span class="text-black font-semibold text-sm">{{ $product->price - $product->discount }} {{__('messages.currency')}}</span>
                 </div>
 
-                <!-- أزرار التحكم -->
                 <div class="flex flex-wrap justify-center gap-2 bg-gray-100 p-2 mt-3 rounded-md">
-                    {{-- زر Show --}}
                     <a href="{{ route('user.product.show', $product->id) }}"
                        class="bg-blue-500 text-white px-3 py-1 rounded text-sm">
                         {{ __('messages.show') }}
                     </a>
 
-                    {{-- زر Delete --}}
                     <form action="{{ route('seller.product.delete', $product->id) }}" method="POST"
-                          onsubmit="return confirm('هل أنت متأكد من الحذف؟')" class="inline-block">
+                          onsubmit="return confirm('{{ __('messages.confirm_delete_product') }}')" class="inline-block">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
@@ -43,28 +34,23 @@
                         </button>
                     </form>
 
-                    {{-- زر Edit --}}
                     <a href="#"
-                       onclick="openEditModal({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, {{ $product->discount }}, '{{ $product->description }}')"
+                       onclick="openEditModal({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $product->price }}, {{ $product->discount }}, '{{ addslashes($product->description) }}')"
                        class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
                         {{ __('messages.edit') }}
                     </a>
                 </div>
             </div>
 
-            <!-- النافذة المنبثقة للتعديل -->
-            @include('sellers.products.edit')
+            @include('sellers.products.edit', ['product' => $product])
         @endforeach
     </div>
 
-    <!-- أزرار التنقل بين الصفحات -->
     <div class="mt-6 flex justify-center">
         {{ $products->links() }}
     </div>
 </div>
 
-
-<!-- سكريبت التحكم في النافذة المنبثقة -->
 <script>
     function openEditModal(id, name, price, discount, description) {
         document.getElementById('editModal-' + id).classList.remove('hidden');

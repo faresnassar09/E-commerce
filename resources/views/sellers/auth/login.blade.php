@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{__('messages.login') }} </title>
-    @vite('resources/css/app.css')
+    <title>{{__('messages.login_page_title') }} </title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
-        <h2 class="text-xl font-bold text-center text-gray-800 mb-4">{{'sign in'}}</h2>
-        
+        <h2 class="text-xl font-bold text-center text-gray-800 mb-4">{{__('messages.sign_in')}}</h2>
+
         <form action="{{ route('auth.seller.login.submit') }}" method="POST" class="space-y-3">
             @csrf
             <div>
@@ -21,7 +21,7 @@
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
-            
+
             <div>
                 <label for="password" class="block text-gray-700 text-sm font-medium">{{__('messages.password')}}</label>
                 <input type="password" id="password" name="password"  required
@@ -30,19 +30,19 @@
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
-            
-            @if(session('error_type'))
+
+            @if(session('login_failed'))
                 <div class="text-red-500 text-xs text-center font-bold mt-2">
-                    {{ session('error_type') }}
+                    {{ session('login_failed') }}
                 </div>
             @endif
-            
+
             <div>
-                <button type="submit" class="w-full bg-indigo-600 text-white p-2 text-sm rounded-md hover:bg-indigo-700">{{__('messages.login')}}</button>
+                <button type="submit" class="w-full bg-indigo-600 text-white p-2 text-sm rounded-md hover:bg-indigo-700">{{__('messages.login_button')}}</button>
             </div>
         </form>
     </div>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             setTimeout(() => {

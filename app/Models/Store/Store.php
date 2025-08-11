@@ -28,7 +28,7 @@ protected $fillable = [
 
 ];
 
-public function Images(){
+public function images(){
 
 return $this->hasMany(StoreImage::class);
 

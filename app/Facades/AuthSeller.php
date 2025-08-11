@@ -9,7 +9,7 @@ class AuthSeller  extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \App\Services\AuthSeller::class; 
+        return \App\Services\Seller\AuthSeller::class; 
     }
 }
   

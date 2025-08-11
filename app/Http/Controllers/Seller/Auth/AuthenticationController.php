@@ -3,52 +3,37 @@
 namespace App\Http\Controllers\Seller\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Seller\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\UploadImages;
-use App\Traits\Auth_Errors;
 
 class AuthenticationController extends Controller
 {
-  use Auth_Errors;
-
 
     public function login(){
-
 
 return view("sellers.auth.login");
 
     }
 
 
-public function LoginAuthentication(request $request){
+public function LoginAuthentication(LoginRequest $request){
 
-$validation = $request->validate([
 
-'email' => ['required','max:100','email'],
-'password' => ['required','min:8','max:32']
-
-]);
-
-if(Auth::guard('seller')->attempt($validation)){
+if(Auth::guard('seller')->attempt($request->only(['email','password']))){
 
     $request->session()->regenerate();
 
 
-    return redirect()->route('seller.dashboard');
+    return to_route('seller.dashboard');
 
 }else{
 
-   $notify = Auth_Errors::Login_error($request->email);
-
-
-   return back()->with('error_type',$notify);
+   return back()->with('failed','error occurred while logging in ');
 
 }
 
 }
-
-
 
     public function destroy(request $request){
 

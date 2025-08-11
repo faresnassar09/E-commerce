@@ -98,7 +98,7 @@ Route::controller(OrderController::class)
     Route::get('canceled', 'getcancelledOrdes')->name('cancelled');
     Route::patch('return-request', 'returnOrderRequest')->name('return');
     Route::get('returned', 'getReturnedOrders')->name('get_returns');
-    Route::get('traking/{id}', 'traking')->name('traking');
+    Route::get('traking/{order}', 'traking')->name('traking');
 });
 
 

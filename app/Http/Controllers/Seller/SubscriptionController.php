@@ -4,57 +4,58 @@ namespace App\Http\Controllers\Seller;
 
 use App\Facades\AuthSeller;
 use App\Http\Controllers\Controller;
+use App\Services\Seller\LoggingService;
+use App\Services\Seller\SubscriptionService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
+
+        public function __construct(
+
+        public SubscriptionService $subscriptionService,
+        public LoggingService $loggingService,
+    ) {}
+
     public function createCheckout(Request $request)
     {
-        $seller = AuthSeller::fullInfo();
 
-        //delete the old cancelled subscription if exsist
-          
-        $this->deleteOldSubscriptionIfExists($seller);
- 
-  
-        return $seller->newSubscription('default', 'price_1Rbc1gQB0tWmP4Q3UQXyV6H6')
-            ->trialDays(91)
-            ->checkout([
-                'success_url' => route('seller.subscription.success'),
-                'cancel_url' => route('seller.subscription.failed'),
+        try {
+
+            $seller = AuthSeller::fullInfo();
+
+            $this->subscriptionService->deleteOldSubscriptionIfExists($seller);
+
+            $this->subscriptionService->applySubscription($seller);
+
+            $this->loggingService->success('seller subscriped successfully', []);
+
+        } catch (\Exception $e) {
+
+
+            $this->loggingService->failed('Unexpected error occyrred while complite subscription', [
+
+            $e->getMessage(),
+
             ]);
-    }
 
+            return back('failed', __('notifications.subscription_process_failed'));
+        }
+    }
 
     public function getSubscriptionDetails()
     {
 
-        $subscription = AuthSeller::fullInfo()->subscription('default');
+        $subscription = AuthSeller::fullInfo()->subscription();
         $renewsAt = null;
 
         if ($subscription && $subscription->active()) {
 
-
-
-            \Stripe\Stripe::setApiKey(config('cashier.secret'));
-
-            //cache value because it takes long time to load
-
-            $stripeSub = Cache::remember("stripeSub.{$subscription->stripe_id}", now()->addMinutes(10), function () use ($subscription) {
-
-                return \Stripe\Subscription::retrieve($subscription->stripe_id)->toArray();
-            });
-
-            $renewsAt = \Carbon\Carbon::createFromTimestamp($stripeSub['current_period_end']);
+            $renewsAt = $this->subscriptionService->subscriptionDeadline($subscription);
         }
-
 
         return view('sellers.billing', compact('subscription', 'renewsAt'));
     }
-
-
 
     public function cancel()
     {
@@ -63,52 +64,20 @@ class SubscriptionController extends Controller
 
         if (!$subscription || ! $subscription->active()) {
 
-            Log::channel('seller')->error('an error occrred while attemping cancel the subscription',[
+            $this->loggingService->failed('an error occrred while attemping cancel the subscription', [
 
-                'seller_id' => AuthSeller::id(),
-                'stripe_id' => $subscription->stripe_id,
-
+                substr($subscription->stripe_id, -6),
             ]);
 
-            return back()->with('failed', 'حدثت مشكلة اثناء الغاء الاشتراك تواصل مع الدعم');
-
+            return back()->with('failed',__('notifications.subscription_cancelation_failed'));
         }
 
- $subscription->cancel();
+        $this->subscriptionService->cancelSubscription($subscription);
 
-             Log::channel('seller')->error('the subscription has been canceled',[
+        $this->loggingService->failed('the subscription has been canceled', [
 
-                'seller_id' => AuthSeller::id(),
-                'stripe_id' => $subscription->stripe_id,
-
-            ]);
-        return back()->with('success','تم الغاء الاشتراك بنجاح يمكنك سيكون لك وصول حتي انتهاء فترة الاشتراك');
-    } 
-
-
-    private function deleteOldSubscriptionIfExists($seller){
-
-
-        try{
-
-            $seller->subscriptions()
-            ->whereNotNull('ends_at')
-            ->where('ends_at', '<=', now())
-            ->delete();
-
-        }catch(\Exception $e){
-
-
-            Log::channel('seller')->error('failed to delete an subscription',[
-
-                'seller_id' => $seller->id,
-                'error' => $e->getMessage(),
-
-            ]);
-
-        }
-
-
+            substr($subscription->stripe_id, -6),
+        ]);
+        return back()->with('success',__('notifications.subscription_canceled_successfully') );
     }
 }
-  

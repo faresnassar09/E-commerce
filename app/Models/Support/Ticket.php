@@ -10,6 +10,7 @@ class Ticket extends Model
 {
     use HasFactory;  
 
+    public $fillable = ['seller_id','subject','message'];
 
     public function images(){
 

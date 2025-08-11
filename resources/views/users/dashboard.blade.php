@@ -1,11 +1,13 @@
 @extends('users.partials.app')
 @section('title')
+    {{ __('messages.customer_dashboard_title') }}
+@endsection
 @section('content')
  <div class="flex min-h-screen bg-gray-100">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <div class="container mx-auto py-8 px-4">
-        <h2 class="text-3xl font-bold mb-8">لوحة تحكم العميل 🧾</h2>
+        <h2 class="text-3xl font-bold mb-8">{{ __('messages.customer_dashboard_title') }} 🧾</h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-6">
 
@@ -17,7 +19,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold">الطلبات الجارية</h3>
+                    <h3 class="text-xl font-semibold">{{ __('messages.current_orders') }}</h3>
                     <p class="text-gray-700 text-lg">{{ $data['currentOrders'] }}</p>
                 </div>
             </div>
@@ -30,7 +32,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold">الطلبات المكتملة</h3>
+                    <h3 class="text-xl font-semibold">{{ __('messages.completed_orders') }}</h3>
                     <p class="text-gray-700 text-lg">{{ $data['compleatedOrders'] }}</p>
                 </div>
             </div>
@@ -43,7 +45,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold">المرتجعة</h3>
+                    <h3 class="text-xl font-semibold">{{ __('messages.returned_orders') }}</h3>
                     <p class="text-gray-700 text-lg">{{ $data['returnedOrders'] }}</p>
                 </div>
             </div>
@@ -57,7 +59,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold">الملغية</h3>
+                    <h3 class="text-xl font-semibold">{{ __('messages.canceled_orders') }}</h3>
                     <p class="text-gray-700 text-lg">{{ $data['canceledOrders'] }}</p>
                 </div>
             </div>
@@ -70,8 +72,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold">إجمالي المدفوع</h3>
-                    <p class="text-gray-700 text-lg">{{ $data['totalPaid'] }} درهم</p>
+                    <h3 class="text-xl font-semibold">{{ __('messages.total_paid') }}</h3>
+                    <p class="text-gray-700 text-lg">{{ $data['totalPaid'] }} {{ __('messages.aed') }}</p>
                 </div>
             </div>
 
@@ -83,7 +85,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold">عدد المنتجات</h3>
+                    <h3 class="text-xl font-semibold">{{ __('messages.number_of_items') }}</h3>
                     <p class="text-gray-700 text-lg">{{ $data['items'] }}</p>
                 </div>
             </div>

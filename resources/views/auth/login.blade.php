@@ -1,19 +1,16 @@
 <x-guest-layout>
-    <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
     <script src="https://cdn.tailwindcss.com"></script>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('messages.email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('messages.password')" />
 
@@ -25,9 +22,8 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
         <div class="block mt-4">
-<a href="{{route('register')}}" class="la-2 text-sm text-green-600 dark:text-green-400">{{'create account'}}</a>              
+            <a href="{{route('register')}}" class="la-2 text-sm text-green-600 dark:text-green-400">{{ __('messages.create_account') }}</a>
         </div>
 
         <div class="flex items-center justify-end mt-4">
@@ -42,5 +38,4 @@
             </x-primary-button>
         </div>
     </form>
-    
 </x-guest-layout>

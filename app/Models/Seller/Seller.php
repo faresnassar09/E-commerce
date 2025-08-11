@@ -28,6 +28,8 @@ class Seller extends Authenticatable
     protected $casts = [
 
 'address' =>'array',
+'password' => 'hashed',
+
     ];
 
 
@@ -59,7 +61,6 @@ public function tickets(){
 
     return $this->hasMany(Ticket::class);
 }
-
 
 
         }

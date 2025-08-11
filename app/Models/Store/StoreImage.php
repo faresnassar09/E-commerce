@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class StoreImage extends Model
 {
     use HasFactory;
+
+    public $fillable = ['path'];
 }

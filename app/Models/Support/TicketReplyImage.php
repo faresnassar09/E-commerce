@@ -7,5 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TicketReplyImage extends Model
 {
+
+    public $fillable = ['path'];
+    
     use HasFactory;
 }

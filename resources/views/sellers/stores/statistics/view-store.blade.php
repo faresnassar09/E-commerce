@@ -1,3 +1,4 @@
+
 @vite('resources/css/app.css')
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,33 +13,30 @@
                 <p class="text-sm text-gray-600">{{ $store->city_name. '/'}}{{$store->area_name .'/' }}{{ $store->street }}</p>
 
             </div>
-  
-            <a href="{{'https://quickchart.io/qr?text='.url()->current();}}"> انقر للحصول علي ال qr code</a>
-           
+            
+            <a href="{{'https://quickchart.io/qr?text='.url()->current();}}"> {{__('messages.get_qr_code')}}</a>
+            
             <a href="{{url()->current()}}">
-
-            رابط المتجر {{ url()->current() }}
+                {{__('messages.store_link')}} {{ url()->current() }}
             </a>
-
-
             
             <div class="flex gap-2">
                 <div class="flex-1 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-3 text-center shadow-sm">
-                    🥛 <div class="font-bold text-sm">الألبان</div>
-                    <div class="text-xs">{{ $categories['milks'] ?? 0 }} منتج</div>
+                    🥛 <div class="font-bold text-sm">{{__('messages.milks')}}</div>
+                    <div class="text-xs">{{ $categories['milks'] ?? 0 }} {{__('messages.products')}}</div>
                 </div>
 
                 <div class="flex-1 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-3 text-center shadow-sm">
-                    🌾 <div class="font-bold text-sm">العلافة</div>
-                    <div class="text-xs">{{ $categories['grains']}} منتج</div>
+                    🌾 <div class="font-bold text-sm">{{__('messages.grains')}}</div>
+                    <div class="text-xs">{{ $categories['grains']}} {{__('messages.products')}}</div>
                 </div>
                 <div class="flex-1 bg-green-50 border border-green-200 text-green-800 rounded-lg p-3 text-center shadow-sm">
-                    🥬 <div class="font-bold text-sm">الخضار</div>
-                    <div class="text-xs">{{ $categories['vegetables'] ?? 0 }} منتج</div>
+                    🥬 <div class="font-bold text-sm">{{__('messages.vegetables')}}</div>
+                    <div class="text-xs">{{ $categories['vegetables'] ?? 0 }} {{__('messages.products')}}</div>
                 </div>
                 <div class="flex-1 bg-red-50 border border-red-200 text-red-800 rounded-lg p-3 text-center shadow-sm">
-                    🍎 <div class="font-bold text-sm">الفواكة</div>
-                    <div class="text-xs">{{ $categories['frutis'] ?? 0 }} منتج</div>
+                    🍎 <div class="font-bold text-sm">{{__('messages.fruits')}}</div>
+                    <div class="text-xs">{{ $categories['frutis'] ?? 0 }} {{__('messages.products')}}</div>
                 </div>
             </div>
 
@@ -65,24 +63,21 @@
                 <p class="text-sm text-gray-500 line-clamp-2">{{ $product->description }}</p>
 
                 <div class="text-xs text-gray-700 pt-2 border-t space-y-1">
-                    <div>💰 <span class="font-medium">السعر:</span> {{ $product->price }} ج</div>
-                    <div>🟢 <span class="font-medium">المتوفر:</span> {{ $product->available_quantity }}</div>
-                    <div>📦 <span class="font-medium">المباع:</span> {{ $product->sold_quantity }}</div>
+                    <div>💰 <span class="font-medium">{{__('messages.price')}}:</span> {{ $product->price }} {{__('messages.currency')}}</div>
+                    <div>🟢 <span class="font-medium">{{__('messages.available')}}:</span> {{ $product->available_quantity }}</div>
+                    <div>📦 <span class="font-medium">{{__('messages.sold')}}:</span> {{ $product->sold_quantity }}</div>
                 </div>
 
                 <div class="mt-3 flex justify-between items-center gap-2">
                     <a href="{{ route('user.product.show',$product->id) }}"
                         class="flex-1 text-center text-sm bg-blue-600 text-white py-1.5 rounded hover:bg-blue-700 transition">
-                        👁️ عرض المنتج
+                        👁️ {{__('messages.view_product')}}
                     </a>
-
-
-                </div>                    
+                </div>
             </div>
         </div>
         @endforeach
     </div>
-
 </div>
 
 <script>

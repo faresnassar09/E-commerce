@@ -1,272 +1,138 @@
 <?php
- 
+
 namespace App\Http\Controllers\Seller\Store;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Stores\EditStore;
+use App\Http\Requests\Stores\EditStoreRequest;
 use App\Http\Requests\Stores\StoreRequest;
 use App\Models\store\Store;
 use App\Facades\AuthSeller;
 use App\Services\FileServices;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Services\Seller\LoggingService;
+use App\Services\Seller\StoreService;
+use Illuminate\Support\Facades\Gate;
 
 class StoreController extends Controller
 {
- 
-    public  $sellerId ;
 
-    public function __construct(public FileServices $fileServices) {
+    public  $sellerId;
 
-        $this->middleware(function ($request, $next) {
-            $this->sellerId = AuthSeller::id();
-            return $next($request);
-        });
+    public function __construct(
 
+        public FileServices $fileServices,
+        public StoreService $storeService,
+        public LoggingService $loggingService,
 
-
-
-
-    }
+    ) {}
 
     public function index()
     {
+        $stores = $this->storeService->getStores();
 
-
-        $seller = AuthSeller::fullInfo();
-        $title = 'المتاجر';
-        $stores = $seller->stores()->with('Images', 'city', 'area')->get();
-
-        return view('sellers.stores.operations.index', compact('stores', 'title'));
+        return view('sellers.stores.operations.index', compact('stores'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $title = 'انشاء متجر';
-
-        return view('sellers.stores.operations.create', compact('title'));
+        return view('sellers.stores.operations.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
 
     public function store(StoreRequest $request)
     {
 
-        $seller = AuthSeller::fullInfo();
-
-        $store = $this->insertStore($request, $seller);
-
-        if ($request->hasFile('images')) {
-
-
-            $this->uploadImages($request->images, $store->id);
-        }
-
-        return back()->with('success', 'تم اضافة المتجر بنجاح');
-    }
-
-    public function edit($storeId)
-    {
-        return $this->editStore($storeId);
-    }
-
-
-    public function update(EditStore $request, $storeId)
-    {
-
-        $store = $this->findStore($storeId);
-
-
-        if (!$store) {
-
-            return $this->storeNotFound();
-        }
-
-        $this->updateStore($request , $store);
-
-
-        return back()->with('success', 'تم التعديل بنجاح');
-    }
-
-
-    public function destroy($storeId)
-    {
-
-
-
-        $store = $this->findStore($storeId);
-
-        if (!$store) {
-
-            return $this->storeNotFound();
-        }
-try {
-
-
-        $store->delete();
-
-        Log::channel('seller')->info(' trying to delete :: store has been deleted', [
-
-            'seller_id' => $this->sellerId,
-            'store_info' => $store,
-        ]);
-
-        return back()->with('success', 'تم حذف المتجر');
-
-} catch (\Exception $e) {
-
-    Log::channel('seller')->info(' trying to delete :: store has been deleted', [
-
-        'store_info' => $store,
-        'exception_details' => $e->getMessage(),
-    ]);
-}
-
-
-    }
-
-
-    private function insertStore($request, $seller)
-    {
-
         try {
 
-            $store = $seller->stores()->create([
+            $store = $this->storeService->createStore($request);
 
-                'name' => $request->name,
-                'description' => $request->description,
-                'city_id' => $request->address['city_id'],
-                'area_id' => $request->address['area_id'],
-                'street' => $request->address['street'] ?? null,
-                
+            if ($request->hasFile('images')) {
+
+                $imagesPaths = $this->fileServices->uploadMultipleImages(
+
+                    $request->file('images'),
+                    'stors_images'
+                );
+
+                $this->storeService->insertImages($store, $imagesPaths);
+            }
+
+            $this->loggingService->success('Store created successfully', [
+
+                'store_id' => $store?->id,
             ]);
-             
 
+            return back()->with('success',__('notifications.store_created_successfully'));
 
-            Log::channel('seller')->info('store has been created', [
-
-                'seller_id' => AuthSeller::id(),
-                'store_id' => $store?->id ,
-
-            ]); 
-            
-            return $store;
-              
-        } catch (\Illuminate\Database\QueryException $e) {
-
-            Log::channel('seller')->error('store has been not created', [
-
-                'seller_id' => $this->sellerId,
-                'exception_details' => $e->getMessage(),
-
-            ]);
-        }
-
-
-    }
-
-    private function uploadImages($images, $storeId)
-    {
-        try {
-
-
-            $Status = $this->fileServices->uploadMultipleImages(
-                $table = 'store_images',
-                $foreginId = 'store_id',
-                $storeId = $storeId,
-                $images = $images,
-                $folder = 'store_images',
-            );
-
-            Log::channel('seller')->info('images have been uploaded successfully', [
-
-                'user_id' => $this->sellerId,
-                'table' =>  $table,
-                'foreginId' => $foreginId,
-                'store_id' => $storeId,
-                'folder' => $folder,
-
-
-            ]);
         } catch (\Exception $e) {
 
-            Log::channel('seller')->error('An error occurred while uploading images', [
+            $this->loggingService->failed('Error occurred while createing store', [
 
-                'user_id' => $this->sellerId,
                 'exception_details' => $e->getMessage(),
-                'table' =>  $table,
-                'foreginId' => $foreginId,
-                'store_id' => $storeId,
-                'folder' => $folder,
-
-
             ]);
+
+            return back()->with('failed',__('notifications.store_create_failed'));
         }
     }
 
-
-
-    private function editStore($storeId)
+    public function edit(Store $store)
     {
 
+        Gate::forUser(AuthSeller::fullInfo())->authorize('edit', $store);
 
-        $store = $this->findStore($storeId);
+        return view('sellers.stores.operations.edit', compact('store'));
+    }
 
+    public function update(EditStoreRequest $request, Store $store)
+    {
 
-        if (!$store) {
+        try {
 
-            Log::channel('seller')->error('store not found', [
+            Gate::forUser(AuthSeller::fullInfo())->authorize('update', $store);
 
-                'user_id' => $this->sellerId,
-                'store_id' => $storeId,
+            $this->storeService->updateStore($store, $request);
+
+            $this->loggingService->success('Store updated successfully', [
+
+                'store_id' => $store?->id,
             ]);
 
-            return back()->with('failed', 'المتجر غير موجود');
-        } else {
+            return back()->with('success', __('notifications.store_updated_successfully'));
 
-            $title = 'تعديل المتجر' . $store->name;
+        } catch (\Exception $e) {
 
-            return view('sellers.stores.operations.edit', compact('store', 'title'));
+            $this->loggingService->failed('Error occurred while updating store', [
+
+                'exception_details' => $e->getMessage(),
+            ]);
+
+            return back()->with('failed', __('notifications.store_update_failed'));
         }
     }
 
-    private function updateStore($request , $store)
+    public function destroy(Store $store)
     {
 
-        $store->name = $request->name;
-        $store->description = $request->description;
-        $store->city_id = $request->address['city_id'] ?? $store->city_id;
-        $store->area_id = $request->address['area_id'] ?? $store->area_id;
-        $store->street = $request->address['street']   ?? $store->street;
+        try {
 
-        $store->save();
+            Gate::forUser(AuthSeller::fullInfo())->authorize('delete', $store);
 
-        Log::channel('seller')->info('store has been updated', [
+            $this->storeService->destroyStore($store);
 
-            'seller_id' => $this->sellerId,
-            'store_id' => $store->id,
-        ]);
+            $this->loggingService->success('Store deleted successfully', [
+
+                'store_id' => $store?->id,
+            ]);
+
+            return back()->with('success',__('notifications.store_deleted_successfully'));
+
+        } catch (\Exception $e) {
+
+            $this->loggingService->failed('Error occurred while deleting store', [
+
+                'exception_details' => $e->getMessage(),
+            ]);
+
+        }
+
+        return back()->with('failed',__('notifications.store_delete_failed'));
     }
-
-    private function findStore($storeId)
-    {
-
-        return AuthSeller::fullInfo()->stores()->find($storeId);
-    }
-
-    private function storeNotFound()
-    {
-
-        Log::channel('seller')->error('store not found', [
-
-            'seller_id' => $this->sellerId,
-            'store_id' => request('store_id'),
-        ]);
-        return redirect()->back()->with('failed', 'لقد حدث خطاء حاول مرة اخري');
-    }
-}
+}  

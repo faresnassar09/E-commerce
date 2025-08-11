@@ -16,26 +16,17 @@ use App\Services\Send_Mail;
 use App\Models\City;
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
+
     public function create()
     {
-/*
-        $Resiver ="hh01226241915@gmail.com";
-        Send_Mail::Wellcome_Message($Resiver);
-*/
+
 
 $cities  = City::get();
 
         return view('auth.register',compact('cities'));
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
+
     public function store(Request $request): RedirectResponse
     {
 

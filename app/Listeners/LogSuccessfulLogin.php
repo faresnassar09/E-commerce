@@ -16,9 +16,7 @@ class LogSuccessfulLogin
         //
     }
 
-    /**
-     * Handle the event.
-     */
+  
     public function handle(object $event): void
     {
         Log::channel('user')->info('User logged in', [

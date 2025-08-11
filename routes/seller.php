@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Seller\Product\ProductsController;
-use App\Http\Controllers\Seller\Product\StatisticsController;
+use App\Http\Controllers\Seller\Product\ProductController;
+use App\Http\Controllers\Seller\Product\StatisticController;
 
 use App\Http\Controllers\Seller\Auth\RegistrationController;
 use App\Http\Controllers\Seller\Auth\AuthenticationController;
@@ -12,7 +12,7 @@ use App\Http\Controllers\Seller\SellerController;
 use App\Http\Controllers\Seller\Store\StoreController;
 use App\Http\Controllers\Seller\Store\StatisticsController as StoreStaticsesController;
 use App\Http\Controllers\Seller\SubscriptionController;
-use App\Http\Controllers\Support\Complaint;
+use App\Http\Controllers\Support\ComplaintController;
 
 Route::controller(SellerController::class)
     ->middleware('auth:seller')
@@ -59,7 +59,6 @@ Route::controller(ProfileController::class)
         Route::get('index', 'index')->name('index');
         Route::post('update', 'update')->name('update');
         Route::get('destroy', 'destroy');
-        // Route::get('notifications','notify')->name('notify');
 
     });
 
@@ -73,9 +72,9 @@ Route::controller(StoreController::class)
         Route::get('index', 'index')->name('index');
         Route::get('create', 'create')->name('create');
         Route::post('create', 'store')->name('create.submit');
-        Route::get('edit/{id}', 'edit')->name('edit');
-        Route::post('update/{id}', 'update')->name('update');
-        Route::get('delete/{id}', 'destroy')->name('delete');
+        Route::get('edit/{store}', 'edit')->name('edit');
+        Route::post('update/{store}', 'update')->name('update');
+        Route::get('delete/{store}', 'destroy')->name('delete');
     });
 
 Route::controller(StoreStaticsesController::class)
@@ -89,22 +88,22 @@ Route::controller(StoreStaticsesController::class)
 
 
     });
-Route::controller(ProductsController::class)
+Route::controller(ProductController::class)
     ->middleware(['auth:seller', 'checksubsription','seller_not_baneed'])
-    ->prefix('/seller/products-managemt')
+    ->prefix('seller/product-managemt/')
     ->name('seller.product.')
     ->group(function () {
 
         Route::get('index', 'index')->name('index');
         Route::get('create', 'create')->name('create');
         Route::post('insert', 'store')->name('store');
-        Route::patch('update/{id}', 'update')->name('update');
-        Route::delete('delete/{id}', 'destroy')->name('delete');
-        Route::delete('delete-image/{image_id}', 'Delete_Image')->name('image.delete');
+        Route::patch('update/{product}','update')->name('update');
+        Route::delete('delete/{product}', 'destroy')->name('delete');
+        Route::get('delete-image/{image}', 'deleteImage')->name('image.delete');
     });
 
 
-Route::controller(StatisticsController::class)
+Route::controller(StatisticController::class)
     ->middleware(['auth:seller', 'checksubsription','seller_not_baneed'])
     ->prefix('seller/products/statics')
     ->name('seller.statics.')
@@ -128,8 +127,8 @@ Route::controller(OrderController::class)
         Route::get('canceled', 'getCanceledOrders')->name('canceled');
         Route::get('delivered', 'getDeliveredOrders')->name('delivered');
         Route::get('return-requests', 'getReturnRequests')->name('return_requests');
-        Route::patch('return-accept/{id}', 'acceptReturnRequest')->name('return.accept');
-        Route::patch('return-reject/{id}', 'rejectReturnRequest')->name('return.reject');
+        Route::patch('return-accept/{order}', 'acceptReturnRequest')->name('return.accept');
+        Route::patch('return-reject/{order}', 'rejectReturnRequest')->name('return.reject');
     });
 
 
@@ -147,7 +146,7 @@ Route::controller(SubscriptionController::class)
     });
 
 
-    Route::controller(Complaint::class)
+    Route::controller(ComplaintController::class)
     ->prefix('seller/complaint/')
     ->name('support.complaint.')
     ->middleware('auth:seller')
@@ -155,9 +154,9 @@ Route::controller(SubscriptionController::class)
 
         Route::get('tickets', 'index')->name('tickets');
         Route::post('store', 'store')->name('store');
-        Route::get('show/{id}', 'show')->name('show');
-        Route::delete('delete', 'deleteTicket')->name('delete');
-        Route::post('new-reply/{id}', 'submitReply')->name('insert_reply');
+        Route::get('show/{ticket}', 'show')->name('show');
+        Route::delete('delete/{ticket}', 'deleteTicket')->name('delete');
+        Route::post('new-reply/{ticket}', 'submitReply')->name('insert_reply');
 
 
        

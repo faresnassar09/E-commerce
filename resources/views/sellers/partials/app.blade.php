@@ -5,8 +5,8 @@
 
     <meta charset="UTF-8">
     <title>@yield('title', ' ')</title>
-    @vite('resources/css/app.css')
-</head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    </head>
 <body class="bg-gray-100">
 
     @include('layouts.messages')

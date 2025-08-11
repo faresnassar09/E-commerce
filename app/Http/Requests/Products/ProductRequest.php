@@ -23,11 +23,10 @@ class ProductRequest extends FormRequest
     {
         return [
 
-    'discount' =>    ['max:150'],
     'name' =>        ['required','min:6','max:255','unique:products'],
     'description' => ['required','min:10','max:1000'],
-    'price' =>       ['numeric','min:0.1','max:10000'],
-    'quantity' =>    ['numeric','min:1','max:1000'],
+    'price' =>       ['numeric','min:0.1','max:500'],
+    'discount' =>    ['max:150','lt:price'],
     'quantity' =>    ['numeric','min:1','max:1000'],
     'category_id' => ['required'],
     'images.*' =>    ['required','mimes:jpeg,png,jpg,gif,svg','max:2048',],

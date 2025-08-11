@@ -16,10 +16,8 @@ return new class extends Migration
             
             $table->foreignId("order_id")
             ->constrained()
-            ->cascadeOnUpdate()
             ->cascadeOnDelete();
             
-            $table->string("title");
             $table->string("details",255);
             $table->string('type',20);
             $table->timestamps();

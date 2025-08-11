@@ -1,45 +1,39 @@
-@vite('resources/css/app.css')
+<script src="https://cdn.tailwindcss.com"></script>
 @livewireStyles
 @livewireScripts
 <div class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-    {{-- بيانات المتجر + البائع + الألبان والعلافة --}}
     <div id="store-card"
          class="opacity-0 translate-y-6 transition duration-700 bg-white border border-gray-200 rounded-2xl shadow-md p-6 flex flex-col md:flex-row justify-between items-start gap-2">
 
         <div class="flex flex-col gap-3 w-full md:w-1/2">
-            {{-- بيانات المتجر --}}
             <div class="space-y-1">
                 <h1 class="text-2xl font-bold text-gray-800">{{ $store->name }}</h1>
                 <p class="text-sm text-gray-600">{{ $store->city_name. '/'}}{{$store->area_name .'/' }}{{ $store->street }}</p>
-
-
             </div>
 
-            {{-- خانات الألبان والعلافة --}}
             <div class="flex gap-2">
                 <div class="flex-1 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-3 text-center shadow-sm">
-                    🥛 <div class="font-bold text-sm">الألبان</div>
-                    <div class="text-xs">{{ $categories['milks'] ?? 0 }} منتج</div>
+                    🥛 <div class="font-bold text-sm">{{ __('messages.milks') }}</div>
+                    <div class="text-xs">{{ $categories['milks'] ?? 0 }} {{ __('messages.product_count') }}</div>
                 </div>
-  
+
                 <div class="flex-1 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg p-3 text-center shadow-sm">
-                    🌾 <div class="font-bold text-sm">العلافة</div>
-                    <div class="text-xs">{{ $categories['grains'] ?? 0 }} منتج</div>
+                    🌾 <div class="font-bold text-sm">{{ __('messages.grains') }}</div>
+                    <div class="text-xs">{{ $categories['grains'] ?? 0 }} {{ __('messages.product_count') }}</div>
                 </div>
                 <div class="flex-1 bg-green-50 border border-green-200 text-green-800 rounded-lg p-3 text-center shadow-sm">
-                🥬  <div class="font-bold text-sm">الخضار</div>
-                    <div class="text-xs">{{ $categories['vegetables'] ?? 0 }} منتج</div>
+                🥬  <div class="font-bold text-sm">{{ __('messages.vegetables') }}</div>
+                    <div class="text-xs">{{ $categories['vegetables'] ?? 0 }} {{ __('messages.product_count') }}</div>
                 </div>
                 <div class="flex-1 bg-red-50 border border-red-200 text-red-800 rounded-lg p-3 text-center shadow-sm">
-                🍎 <div class="font-bold text-sm">الفواكة</div>
-                    <div class="text-xs">{{ $categories['frutis'] ?? 0 }} منتج</div>
+                🍎 <div class="font-bold text-sm">{{ __('messages.fruits') }}</div>
+                    <div class="text-xs">{{ $categories['frutis'] ?? 0 }} {{ __('messages.product_count') }}</div>
                 </div>
             </div>
-            
-        </div>  
 
-        {{-- بيانات البائع --}}
+        </div>
+
         <div class="bg-gray-50 px-4 py-2 rounded-lg border text-sm text-gray-700 shadow-sm w-full md:w-auto mt-4 md:mt-0">
             👤 <span class="font-semibold">{{ $store->seller->name }}</span><br>
             📞 <span class="text-blue-600">{{ $store->seller->phone_numbers }}</span>
@@ -61,31 +55,29 @@
                 <p class="text-sm text-gray-500 line-clamp-2">{{ $product->description }}</p>
 
                 <div class="text-xs text-gray-700 pt-2 border-t space-y-1">
-                    <div>💰 <span class="font-medium">السعر:</span> {{ $product->price }} ج</div>
-                    <div>🟢 <span class="font-medium">المتوفر:</span> {{ $product->available_quantity }}</div>
-                    <div>📦 <span class="font-medium">المباع:</span> {{ $product->sold_quantity }}</div>
+                    <div>💰 <span class="font-medium">{{ __('messages.price') }}:</span> {{ $product->price }} ج</div>
+                    <div>🟢 <span class="font-medium">{{ __('messages.available') }}:</span> {{ $product->available_quantity }}</div>
+                    <div>📦 <span class="font-medium">{{ __('messages.sold') }}:</span> {{ $product->sold_quantity }}</div>
                 </div>
 
                 <div class="mt-3 flex justify-between items-center gap-2">
                     <a href="{{ route('user.product.show',$product->id) }}"
                        class="flex-1 text-center text-sm bg-blue-600 text-white py-1.5 rounded hover:bg-blue-700 transition">
-                        👁️ عرض المنتج
+                        👁️ {{ __('messages.view_product') }}
                     </a>
-                    <a 
+                    <a
                        class="text-sm text-white px-3 py-1.5 rounded transition whitespace-nowrap">
                        <livewire:add-to-cart :id="$product->id" />
-
                     </a>
                 </div>
             </div>
         </div>
     @endforeach
-</div>
+    </div>
 
 </div>
 
 <script>
-    // Animation on load (store header + products)
     window.addEventListener("DOMContentLoaded", () => {
         const storeCard = document.getElementById("store-card");
         storeCard.classList.remove("opacity-0", "translate-y-6");

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-
-use App\Models\User\Cart;
 use Illuminate\Support\Facades\Auth;
 
 class cartItemsController extends Controller

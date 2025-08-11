@@ -2,94 +2,78 @@
 
 namespace App\Livewire;
 
+use App\Services\User\CartItemService;
+use App\Services\User\LoggingService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use PhpParser\Node\Stmt\TryCatch;
 
 class AddToCart extends Component
 {
+    public $productId = 0;
 
-    public $Product_id = 0;
+    public function mount($id)
+    {
 
-
-
-public function mount($id){
-
-
-    $this->Product_id =$id;
-
-
-}
-
-public function Store(){
-
-    if (!auth()->check()) {
-
-        Log::channel('user')->error('user are not loged in');
-
-        return to_route('login');
-
-    }elseif(DB::table('products')->where('id',$this->Product_id)->value('available_quantity') < 1){
-
-         Log::channel('user')->warning('the product is out of stock',['productId' => $this->Product_id,'userId' => auth()->user()->id]);
-
-        session()->flash('faildMessage','لقد نفذ المخزون هل تريد روية المتاجر القريبة التي تبيع نفس المنتج ؟');  
-
-return;
-
-    }elseif(Auth::user()->Cartitems()->where('product_id',$this->Product_id)->exists()){
-
-        Log::channel('user')->warning('the product is alrady in the cartItems',['productId' => $this->Product_id,'userId' => auth()->user()->id]);
-
-        session()->flash('notEnough','هذا المنتج موجود بالفعل اكمل الشراء من سلة المشتريات');
-        return;
-
+        $this->productId = $id;
     }
- 
-    try {
 
-        DB::table('carts')->insert([
+    public function Store()
+    {
 
-            'product_id' => $this->Product_id,
-            'user_id' => auth()->user()->id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
- 
-         Log::channel('user')->info('user added an item to the cart',[
+   try {
+
+        if (!Auth::check()) {
+
+            app(LoggingService::class)->failed('user are not loged in');
+
+            return to_route('login');
+
+        } elseif (!app(CartItemService::class)->checkProductAvilableQuantity(
+
+            $this->productId
             
-            'product_id' => $this->Product_id,
-            'user_id' => auth()->user()->id,
-        ]);
-        session()->flash('successMessage','تم اضافة المنتج لسلة المشتريات');
+            )) {
 
-return back();
+                app(LoggingService::class)->warning('the product is out of stock',[
 
-    } 
+                    'productId' => $this->productId,
+            ]);
 
-    catch (\Exception $e) {
+            return back()->with(
 
-        Log::channel('user')->error('failed to add the item to cart items',[
+                'failed',
+                __('notification.product_quantity_out_of_stuck')
+            );
 
-            'product_id' => $this->Product_id,
-            'user_id' => auth()->user()->id,
-            'message' => $e->getMessage(),
 
-        ]);
+        } elseif (app(CartItemService::class)->checkIfAlreadyExists($this->productId)) {
 
-        
+            app(LoggingService::class)->warning('the product is alrady in the cartItems',[
 
-        
+                'productId' => $this->productId,
+            ]);
+
+            return back()->with('success',__('notifications.product_already_exists'));
+        }
+
+        app(CartItemService::class)->addItemTocart($this->productId);
+
+            return back()->with('success',__('notifications.product_added_to_cart_items'));
+
+        } catch (\Exception $e) {
+
+            app(LoggingService::class)->failed('failed to add the item to cart items',[
+
+                'product_id' => $this->productId,
+                'exception_details' => $e->getMessage(),
+            ]);
+
+            return back()->with('failed',__('notifications.add_product_to_cart_items_failed'));
+
+
+        }
     }
 
-}
-  
-
-
-
-        
     public function render()
     {
 

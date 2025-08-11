@@ -1,6 +1,4 @@
-
-
-@vite('resources/css/app.css')
+<script src="https://cdn.tailwindcss.com"></script>
 @livewireStyles
 @livewireScripts
 
@@ -41,7 +39,6 @@
 
 <body class="bg-gray-100 font-sans">
 
-<!-- سلايدر المنتج -->
 <div id="slideshow-container" class="relative w-full md:w-[80%] lg:w-[60%] h-[300px] sm:h-[400px] mx-auto mt-6 overflow-hidden rounded-lg bg-black">
     @foreach ($product->images as $index => $image)
         <div class="slide {{ $index === 0 ? 'active' : '' }}">
@@ -53,7 +50,6 @@
     <span class="arrow next" onclick="changeSlide(1)">&#10095;</span>
 </div>
 
-<!-- معلومات المنتج -->
 <div class="bg-white mt-6 rounded-lg shadow p-6 w-[95%] md:w-[85%] lg:w-[70%] mx-auto">
 
     <div class="mb-6">
@@ -62,13 +58,12 @@
     </div>
 
     <div class="flex flex-col md:flex-row-reverse gap-6">
-        <!-- معلومات المتجر -->
         <div class="md:w-1/2">
-            <p class="font-semibold text-lg mb-2">🏬 معلومات المتجر:</p>
-            <p>اسم المتجر: <span class="font-semibold">{{ $product['store']['name'] }}</span></p>
-            <p>المدينة: {{ $product?->store->city_name }}</p>
-            <p>المنطقة: {{ $product?->store->area_name }}</p>
-            <p>الشارع: {{ $product?->store->street }}</p>
+            <p class="font-semibold text-lg mb-2">🏬 {{ __('messages.store_info') }}:</p>
+            <p>{{ __('messages.store_name') }}: <span class="font-semibold">{{ $product['store']['name'] }}</span></p>
+            <p>{{ __('messages.city') }}: {{ $product?->store->city_name }}</p>
+            <p>{{ __('messages.area') }}: {{ $product?->store->area_name }}</p>
+            <p>{{ __('messages.street') }}: {{ $product?->store->street }}</p>
         </div>
     @if (!auth()->guard('seller')->user())
         <div class="text-white text-xl py-3 px-6 mb-4 rounded-full transition ease-in-out duration-300">
@@ -76,22 +71,20 @@
         </div>
     @endif
 
-        <!-- تفاصيل المنتج -->
         <div class="md:w-1/2">
-            <p class="text-lg font-semibold mb-2">💰 السعر: <span class="text-green-600">{{ $product['price'] }} درهم</span></p>
+            <p class="text-lg font-semibold mb-2">💰 {{ __('messages.price') }}: <span class="text-green-600">{{ $product['price'] }} {{ __('messages.currency') }}</span></p>
             @if($product['discount'] > 0)
                 <p class="text-lg font-semibold text-red-500">
-                    🔻 الخصم: <span class="line-through text-gray-500">{{ $product['price'] }}</span>
-                    الآن بـ {{ $product['price'] - $product['discount'] }} درهم
+                    🔻 {{ __('messages.discount') }}: <span class="line-through text-gray-500">{{ $product['price'] }}</span>
+                    {{ __('messages.now_at') }} {{ $product['price'] - $product['discount'] }} {{ __('messages.currency') }}
                 </p>
             @endif
-            <p class="text-md mt-2">📦 الكمية المتاحة: <strong>{{ $product['available_quantity'] }}</strong></p>
-            <p class="text-md">🛒 تم البيع: <strong>{{ $product['sold_quantity'] }}</strong></p>
+            <p class="text-md mt-2">📦 {{ __('messages.available_quantity') }}: <strong>{{ $product['available_quantity'] }}</strong></p>
+            <p class="text-md">🛒 {{ __('messages.sold_quantity') }}: <strong>{{ $product['sold_quantity'] }}</strong></p>
         </div>
     </div>
 </div>
 
-<!-- سلايدر JS -->
 <script>
     let slideIndex = 0;
     const slides = document.querySelectorAll('.slide');
@@ -118,7 +111,6 @@
     showSlide(slideIndex);
 </script>
 
-<!-- Alpine.js لو بتستخدمه -->
 <script src="https://unpkg.com/alpinejs" defer></script>
 
 </body>

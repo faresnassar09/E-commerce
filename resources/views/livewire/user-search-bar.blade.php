@@ -5,7 +5,7 @@
             type="text"
             class="w-full p-3 pl-12 rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-orange-500 text-lg"
             placeholder="{{ __('messages.search_product') }}"
-        > 
+        >
         <svg class="absolute left-4 top-3 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M18.5 10a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"></path>
         </svg>
@@ -24,7 +24,7 @@
 
                 @empty
                     <div class="px-4 py-2 text-gray-500">
-                        {{'لا توجد منتجات مطابقة '}}
+                        {{ __('messages.no_matching_products') }}
                     </div>
                 @endforelse
             </div>

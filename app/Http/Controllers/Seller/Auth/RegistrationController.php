@@ -2,45 +2,25 @@
 
 namespace App\Http\Controllers\Seller\Auth;
 
-use App\Events\Mails\Send_Welcome_Message;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Seller\Store;
-use App\Models\Seller\Seller;
 use App\Services\FileServices;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules;
+use App\Services\Seller\SellerService;
+use App\Facades\AuthSeller;
+use App\Services\Seller\LoggingService;
 
 class RegistrationController extends Controller
 {
 
 
-    public function __construct(public FileServices $fileServices)
-    {
+    public function __construct(
         
-    }
-    
-    public $image = null;
-    public $folder = 'seller_profile_picture';
-    public $guard = 'seller';
+        public FileServices $fileServices,
+        public SellerService $sellerService,
+        public LoggingService $loggingService,
 
-
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return response()->json(['message' => 'Account created successfully','data'=>'fares'], 201);
-
-}
-
-    /**
-     * Show the form for creating a new resource.
-     */
+        ) {}
+  
     public function create()
     {
 
@@ -51,77 +31,42 @@ class RegistrationController extends Controller
     public function store(Store $request)
     {
 
-        $seller = $this->insertSeller($request);
-        
-        $this->Login($seller);
-
-if($request->hasFile('image')){
-
-    $this->uploadProfileImage($request->image);
-
-};
-
-return to_route('seller.dashboard');
-
-    }
-
-
-
-    private function insertSeller($request){
-    
 
         try {
-            
-            $seller = Seller::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone_numbers' => $request->phone_numbers,
-            'password' => Hash::make($request->password),
 
-        ]);
+            $seller = $this->sellerService->createSeller($request);
 
-        Log::channel('seller')->info('seller account created successfully',[
+            AuthSeller::makeUserAuthentcated($seller);
+                    
+        if ($request->hasFile('image')) {
 
-            'seller_id' => $seller->id,
-            'ip_address' => $request->ip(),
-        ]);
+            $sellerAvatarPath = $this->fileServices->uploadImage(
 
-        return $seller;
+                $request->file('image'),
+                'sellers_avatar'
+            );
+
+            if ($sellerAvatarPath) {
+                $this->sellerService->inserSellerAvatar($sellerAvatarPath);
+
+            }
+
+        };
+
+           $this->loggingService->success('seller account created successfully',[]);
+
+            return to_route('seller.dashboard');
 
         } catch (\Exception $e) {
 
 
-            Log::channel('seller')->info('error occurred while creat seller account',[
+            $this->loggingService->failed('error occurred while create seller account', [
 
-                'name' => $request->name,
-                'ip_address' => $request->ip(),
                 'exception_details' => $e->getMessage(),
-            ]);    
-        
+            ]);
         }
-
-
-    
-    }
-
-    private function Login($seller){
-
-
-        auth()->guard($this->guard)->login($seller);
-        session()->regenerate();
-
-    }
-
-    private function uploadProfileImage($profile_Image){
-
-        $this->image = $profile_Image;
- 
-        //everything happens in Upload_Image add anything you want here
-
-    $imagePath =  $this->fileServices->Upload_Image($this->image,$this->folder,$this->guard);
-
-
-
+        
+        return to_route('seller.dashboard');
     }
 
 }

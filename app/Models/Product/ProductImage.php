@@ -9,5 +9,7 @@ class ProductImage extends Model
 {
     use HasFactory;
 
+    public $fillable = ['path'];
+
 
 }

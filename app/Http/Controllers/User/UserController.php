@@ -17,9 +17,9 @@ class UserController extends Controller
 
         $user = Auth::user();
         $userAddress = $user?->addresses()->first();
-
         $products = null;
         $stores = null;
+
         if ($userAddress) {
 
 
@@ -28,7 +28,6 @@ class UserController extends Controller
                     ->orWhere('area_id', $userAddress?->area_id ?? null)
                     ->orWhere('city_id', $userAddress?->city_id ?? null);
             })
-                // لا eager load لأي علاقات
                 ->orderByRaw("
                         CASE
                             WHEN store_id IN (SELECT id FROM stores WHERE street = ?) THEN 1
@@ -63,7 +62,7 @@ if(!$products||!$user ){
     
 }
 
-        return view('welcome', compact('products', 'stores'));
+        return view('index', compact('products', 'stores'));
 
     }
     public function dashboard()
@@ -80,11 +79,8 @@ if(!$products||!$user ){
             'totalPaid' => $user->orders->where('status', 1)->sum('price'),
             'items' => $user->orders()->where('status', 1)->with('items')->count(),
 
-
-
         ];
 
-        // return $data;
         return view('users.dashboard', compact('data'));
     }
 
@@ -97,16 +93,14 @@ if(!$products||!$user ){
     public function storeNewAddress(Request $request)
     {
 
-
         Auth::user()->addresses()->create([
 
-            'street' => $request->address['street'],
-            'city_id' => $request->address['city_id'],
-            'area_id' => $request->address['area_id'],
+            'street' => $request->street,
+            'city_id' => $request->city_id,
+            'area_id' => $request->area_id,
 
 
         ]);
-
 
         return to_route('user.cart.index');
     }

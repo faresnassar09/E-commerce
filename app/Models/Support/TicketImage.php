@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class TicketImage extends Model
 {
     use HasFactory;
+
+    public $fillable = ['ticket_id','path'];
 }

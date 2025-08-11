@@ -37,8 +37,8 @@
         @endif
 
         <div class="flex items-center gap-x-4">
-            <img src="https://via.placeholder.com/40" alt="Logo" class="w-10 h-10">
-            <a href="{{ route('index') }}" class="text-2xl font-bold text-orange-500">g</a>
+            <img src="{{Storage::url('logo.png')}}" alt="Logo" class="w-10 h-10">
+            <a href="{{ route('index') }}" class="text-2xl font-bold text-orange-500">grocery</a>
         </div>
 
         @if(!auth()->user())

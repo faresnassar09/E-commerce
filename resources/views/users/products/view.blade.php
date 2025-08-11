@@ -22,18 +22,24 @@
         .slide.active {
             opacity: 1;
         }
-        .arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-            cursor: pointer;
-            user-select: none;
-            color: white;
-            z-index: 10;
-        }
-        .prev { left: 10px; }
-        .next { right: 10px; }
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px; 
+    cursor: pointer;
+    user-select: none;
+    color: white;
+    z-index: 50; 
+    padding: 15px; 
+    background: rgba(0,0,0,0.3); 
+    border-radius: 50%;
+    pointer-events: auto; 
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
     </style>
 </head>
 
@@ -86,30 +92,65 @@
 </div>
 
 <script>
-    let slideIndex = 0;
-    const slides = document.querySelectorAll('.slide');
-    const numSlides = slides.length;
+let slideIndex = 0;
+const slides = document.querySelectorAll('.slide');
+const numSlides = slides.length;
 
-    function showSlide(n) {
-        slideIndex = (n + numSlides) % numSlides;
-        slides.forEach(slide => slide.classList.remove('active'));
-        slides[slideIndex].classList.add('active');
+if (numSlides <= 1) {
+    document.querySelectorAll('.arrow').forEach(arrow => arrow.style.display = 'none');
+}
+
+function showSlide(n) {
+    slideIndex = (n + numSlides) % numSlides;
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[slideIndex].classList.add('active');
+}
+
+function changeSlide(n) {
+    showSlide(slideIndex + n);
+}
+
+// تحريك بالكيبورد
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'ArrowLeft') {
+        changeSlide(-1);
+    } else if (event.key === 'ArrowRight') {
+        changeSlide(1);
     }
+});
 
-    function changeSlide(n) {
-        showSlide(slideIndex + n);
-    }
+let startX = 0;
+let startY = 0;
+let endX = 0;
+let endY = 0;
 
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'ArrowLeft') {
-            changeSlide(-1);
-        } else if (event.key === 'ArrowRight') {
+const slider = document.getElementById('slideshow-container');
+
+slider.addEventListener('touchstart', function (e) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+}, { passive: true });
+
+slider.addEventListener('touchend', function (e) {
+    endX = e.changedTouches[0].clientX;
+    endY = e.changedTouches[0].clientY;
+
+    let diffX = startX - endX;
+    let diffY = startY - endY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 50) { 
             changeSlide(1);
+        } else if (diffX < -50) { 
+            changeSlide(-1);
         }
-    });
+    }
+}, { passive: true });
 
-    showSlide(slideIndex);
+showSlide(slideIndex);
+
 </script>
+
 
 <script src="https://unpkg.com/alpinejs" defer></script>
 

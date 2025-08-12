@@ -27,16 +27,5 @@ class EditStoreRequest extends FormRequest
                 ];
     }
 
-    public function messages(){
-    
-    return[
-        'name.required' => 'الاسم مطلوب',
-        'name.min' => 'يجب ان يكون الاسم 6 احرف علي الاقل',
-        'name.unique' => 'هذا الاسم مستخدم من قبل',
-        'name.regex' => 'يجب ان يكون الاسم احرف فقط',
-        'description.min' => ' لا يجب ان يقل الوصف عن 10 احرف',
-];
-
- }  
 
 }

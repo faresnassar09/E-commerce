@@ -18,14 +18,14 @@ class CheckSubscription
     {
 
 
-//         if(!AuthSeller::fullInfo()){
+        if(!AuthSeller::fullInfo()){
 
-// return to_route('auth.seller.login');
+return to_route('auth.seller.login');
 
-//         }elseif(AuthSeller::fullInfo()?->subscribed()){
+        }elseif(AuthSeller::fullInfo()?->subscribed()){
 
-//             return to_route('seller.subscription.get_details');
-//         }
+            return to_route('seller.subscription.get_details');
+        }
 
 
         return $next($request);

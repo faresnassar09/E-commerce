@@ -38,17 +38,4 @@ class StoreRequest extends FormRequest
         ];
     }
 
-
-    public function messages(): array
-    {
-
-
-return[
-
-    'name.unique' => 'هذا الاسم محجوز',
-    'name.min' => 'يجب ان يكون الاسم علي الاقل 5 احرف',
-    'description.min' => 'الحد الادني لوصف المتجر 10 احرف', 
- ];
-
-    }
 }

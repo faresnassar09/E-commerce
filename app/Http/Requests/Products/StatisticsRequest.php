@@ -28,9 +28,4 @@ class StatisticsRequest extends FormRequest
         ];
 }
 
-public function messages()
-{
-   return ['quantity.max' => 'لا يمكنك ان تزيد او تنقص اكثر من 200 في المرة الواحده'];
-}
-
 }

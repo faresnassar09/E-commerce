@@ -57,7 +57,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-700 mb-4">
             <div>
                 <p><span class="font-medium text-gray-900">{{ __('messages.payment_method') }}:</span> {{ $order->payment_method }}</p>
-                <p><span class="font-medium text-gray-900">{{ __('messages.amount_paid') }}:</span> {{ $order->price }} {{ __('messages.egp') }}</p>
+                <p><span class="font-medium text-gray-900">{{ __('messages.amount_paid') }}:</span> {{ $order->price }} {{ __('messages.aed') }}</p>
                 <p><span class="font-medium text-gray-900">{{ __('messages.number_of_products') }}:</span> {{ $order->items->sum('quantity') }}</p>
             </div>
 

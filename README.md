@@ -41,5 +41,6 @@ Ready-to-use emails
 User : user@test.com
 Seller : seller@test.com
 Admin : admin@test.com
-Admin Link : https://lightgray-chinchilla-755244.hostingersite.com/admin/login
+Web Site Link : https://lightgray-chinchilla-755244.hostingersite.com/
+Admin Panel Link : https://lightgray-chinchilla-755244.hostingersite.com/admin/login
 

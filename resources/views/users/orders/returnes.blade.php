@@ -80,7 +80,7 @@
                     <div>
                         <p class="font-medium text-gray-900">{{ $item->product->name }}</p>
                         <p class="text-sm text-gray-600">{{ __('messages.quantity') }}: {{ $item->quantity }}</p>
-                        <p class="text-sm text-gray-600">{{ __('messages.price') }}: {{ $item->price }} {{ __('messages.egp') }}</p>
+                        <p class="text-sm text-gray-600">{{ __('messages.price') }}: {{ $item->price }} {{ __('messages.aed') }}</p>
                     </div>
                 </div>
                 @endforeach

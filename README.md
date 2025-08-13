@@ -1,5 +1,5 @@
 # Grocery E-commerce (Laravel)
-![Project Preview](docs/screenshots/welcome_page) 
+![Project Preview](docs/screenshots/welcome_page.png) 
 Multi-vendor e-commerce platform for Users, Sellers, and Admins. Features include persistent cart, multi-store support, product returns, subscriptions via Stripe, tickets, notifications, and full Arabic/English localization.
 
 ## 🚀 Features

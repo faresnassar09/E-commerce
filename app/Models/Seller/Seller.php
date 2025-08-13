@@ -2,16 +2,17 @@
 
 namespace App\Models\Seller;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Store\Store;
-use App\Models\Product\Product;
-use Illuminate\Notifications\Notifiable;
 use App\Models\Order\Order;
+use App\Models\Product\Product;
+use App\Models\Store\Store;
 use App\Models\Support\Ticket;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 
-class Seller extends Authenticatable
+class Seller extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory,Notifiable,Billable;
 

@@ -117,7 +117,7 @@
                 <span class="text-xs">{{ __('messages.cart_items') }}</span>
             </a>
 
-            @if (!request()->routeIs('user.dashboard'))
+            @if (request()->routeIs('user.dashboard'))
                 <a href="{{ route('user.orders.index') }}" class="relative text-white hover:text-orange-400 text-lg flex flex-col items-center">
                     <span class="relative">
                         <i class="fas fa-receipt"></i>
@@ -127,13 +127,17 @@
                     </span>
                     <span class="text-xs">{{ __('messages.orders') }}</span>
                 </a>
-            @endif
-
-            <a href="{{route('user.profile.edit')}}" class="border-2 border-orange-500 text-orange-500 px-4 py-2 rounded hover:bg-orange-500 hover:text-white transition flex items-center">
+            
+                <a href="{{route('user.profile.edit')}}" class="border-2 border-orange-500 text-orange-500 px-4 py-2 rounded hover:bg-orange-500 hover:text-white transition flex items-center">
                 <i class="fas fa-user mr-2"></i> {{ __('messages.profile') }}
 
             </a>
+@else
+            <a href="{{route('user.dashboard')}}" class="border-2 border-orange-500 text-orange-500 px-4 py-2 rounded hover:bg-orange-500 hover:text-white transition flex items-center">
+                <i class="fas fa-user mr-2"></i> {{ __('messages.customer_dashboard_title') }}
 
+            </a>
+@endif
 
         @endguest
     </div>
@@ -158,7 +162,7 @@
                 </a>
             @endif
             <a href="{{ route('user.profile.edit') }}" class="block text-white hover:text-orange-400">
-                <i class="fas fa-user mr-2"></i> {{ __('messages.profile') }}
+                <i class="fas fa-user mr-2"></i> {{ __('messages.customer_dashboard_title') }}
             </a>
 
         @endguest

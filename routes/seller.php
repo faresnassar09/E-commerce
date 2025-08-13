@@ -1,18 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Seller\Auth\AuthenticationController;
+use App\Http\Controllers\Seller\Auth\RegistrationController;
+use App\Http\Controllers\Seller\OrderController;
 use App\Http\Controllers\Seller\Product\ProductController;
 use App\Http\Controllers\Seller\Product\StatisticController;
-
-use App\Http\Controllers\Seller\Auth\RegistrationController;
-use App\Http\Controllers\Seller\Auth\AuthenticationController;
-use App\Http\Controllers\Seller\OrderController;
 use App\Http\Controllers\Seller\ProfileController;
 use App\Http\Controllers\Seller\SellerController;
-use App\Http\Controllers\Seller\Store\StoreController;
 use App\Http\Controllers\Seller\Store\StatisticsController as StoreStaticsesController;
+use App\Http\Controllers\Seller\Store\StoreController;
 use App\Http\Controllers\Seller\SubscriptionController;
 use App\Http\Controllers\Support\ComplaintController;
+
+use Illuminate\Support\Facades\Route;
 
 Route::controller(SellerController::class)
     ->middleware('auth:seller')
@@ -21,7 +21,7 @@ Route::controller(SellerController::class)
     ->group(function () {
 
       Route::view('landing','sellers.index')->name('landing')->withoutMiddleware('auth:seller');
-      Route::get('/dashboard','dashboard')->name('dashboard');
+      Route::get('dashboard','dashboard')->name('dashboard');
       
     });
 

@@ -76,7 +76,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 @foreach($order?->items as $item)
                 <div class="flex items-center gap-4 bg-white p-3 rounded-lg border">
-                    <img src="{{  asset('images/'.$item->product->images->first()->path) ?? 'default.jpg' }}" alt="{{ $item->product->name }}" class="w-16 h-16 object-cover rounded-md border">
+                    <img src="{{  Storage::url($item->product->images->first()->path) ?? 'default.jpg' }}" alt="{{ $item->product->name }}" class="w-16 h-16 object-cover rounded-md border">
                     <div>
                         <p class="font-medium text-gray-900">{{ $item->product->name }}</p>
                         <p class="text-sm text-gray-600">{{ __('messages.quantity') }}: {{ $item->quantity }}</p>

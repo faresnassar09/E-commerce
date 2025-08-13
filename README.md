@@ -38,9 +38,9 @@ php artisan serve
 
 Ready-to-use emails
 
-User : user@test.com
-Seller : seller@test.com
-Admin : admin@test.com
+User : user@test.com         Password = 00000000
+Seller : seller@test.com     Password = 00000000 
+Admin : admin@test.com       Password = 00000000
 Web Site Link : https://lightgray-chinchilla-755244.hostingersite.com/
 Admin Panel Link : https://lightgray-chinchilla-755244.hostingersite.com/admin/login
 

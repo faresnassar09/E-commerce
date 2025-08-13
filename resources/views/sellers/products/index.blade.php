@@ -15,7 +15,7 @@
                     @if($product->discount > 0)
                         <span class="text-gray-500 line-through text-sm block">{{ $product->price }} {{__('messages.aed')}}</span>
                     @endif
-                    <span class="text-black font-semibold text-sm">{{ $product->price - $product->discount }} {{__('messages.currency')}}</span>
+                    <span class="text-black font-semibold text-sm">{{ $product->price - $product->discount }} {{__('messages.aed')}}</span>
                 </div>
 
                 <div class="flex flex-wrap justify-center gap-2 bg-gray-100 p-2 mt-3 rounded-md">

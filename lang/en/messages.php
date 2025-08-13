@@ -354,4 +354,5 @@ return [
     'new_password_placeholder' => 'Enter a new password',
     'save_changes' => 'Save Changes',
     'reset' => 'Reset',
+    'profile_page_title' =>  'Edit Profile',
 ];

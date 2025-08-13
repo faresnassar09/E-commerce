@@ -339,4 +339,6 @@ return [
     'new_password_placeholder' => 'أدخل كلمة مرور جديدة',
     'save_changes' => 'حفظ التعديلات',
     'reset' => 'إعادة تعيين',
+    'profile_page_title' => 'تعديل الملف الشخصي',
+    
 ];

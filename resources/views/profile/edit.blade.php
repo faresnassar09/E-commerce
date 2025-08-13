@@ -1,6 +1,6 @@
-<x-app-layout>
-
-
+@extends('users.partials.app')
+@section('content')
+@section('title',__('messages.profile_page_title'))
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('messages.profile') }}
@@ -29,4 +29,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

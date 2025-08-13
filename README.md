@@ -32,7 +32,7 @@ cp .env.example .env
 # fill DB_*, MAIL_*, STRIPE_* keys
 composer install
 php artisan key:generate
-php artisan migrate --seed
+php artisan migrate
 php artisan storage:link
 php artisan serve
 

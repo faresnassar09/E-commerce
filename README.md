@@ -1,46 +1,73 @@
 # Grocery E-commerce (Laravel)
+![Project Preview](docs/screenshots/preview.png) 
+Multi-vendor e-commerce platform for Users, Sellers, and Admins. Features include persistent cart, multi-store support, product returns, subscriptions via Stripe, tickets, notifications, and full Arabic/English localization.
 
-Multi-vendor e-commerce platform (Users, Sellers, Admins) with persistent cart, multi-store, returns, subscriptions (Stripe), tickets, notifications, and Arabic/English localization.
+## 🚀 Features
+**User**
+- Persistent Cart (DB-based), multiple addresses per user
+- Full order lifecycle: open / delivered / returned
+- Submit return reasons with email notifications
+- Browse products by categories & search
+- Subscriptions via Stripe with access control
+- Manage personal orders & profile
 
-## Features
-- Roles & Policies: Users / Sellers / Admins
-- Persistent Cart (DB-based), multi addresses per user
-- Full order lifecycle: open / delivered / returned + return reason & email notifications
-- Sellers: multi-store, multi-image products, stats dashboard
-- Admin: tickets (chat-like) with attachments, global stats
-- Subscriptions via Stripe + middleware gating
-- Categories & search
-- Notifications & logging
-- Livewire for interactive UI
-- Localization : English & Arabic
-- Clean architecture: Services, Policies, Facades
+**Seller**
+- Multi-store management
+- Add products with multiple images
+- Store statistics and sales dashboard
 
-## Tech Stack
-Laravel, Livewire, MySQL/PostgreSQL, Filament, Mail, Stripe
+**Admin**
+- Manage tickets (chat-like) with attachments
+- Manage Users,Seller,Products,Orders,Areas,cities categories and stores
 
-## Screenshots
-See `/docs/screenshots/` for flows (cart, checkout, seller dashboard, tickets, etc.)
+## 🧰 Tech Stack
+Laravel, Livewire, MySQL/PostgreSQL, Filament, Stripe, Mail, Localization (English & Arabic), Logging
 
-## Getting Started
-### Requirements
-- PHP 8.2+, Composer
+## 📂 Project Structure
+
+app/ ->
+Services/ → Business logic
+Policies/ → Access control
+
+resources/
+views/ → Blade templates
+
+routes/
+web.php → Web routes
+
+docs/
+screenshots/ → Project images
+
+
+
+## 📸 Screenshots
+See `/docs/screenshots/` for:
+- Cart & Checkout
+- Seller Dashboard
+- Tickets System
+
+## 🛠 Installation & Usage
+**Requirements**
+- PHP 8.2+
+- Composer
 - MySQL
 
-### Installationb & Using
-```bash
+**Setup**
 cp .env.example .env
-# fill DB_*, MAIL_*, STRIPE_* keys
+# Fill DB_*, MAIL_*, STRIPE_* keys
 composer install
 php artisan key:generate
 php artisan migrate
 php artisan storage:link
 php artisan serve
 
-Ready-to-use emails
+| Role   | Email            | Password |
+| ------ | ---------------- | -------- |
+| User   | user@test.com    | 00000000 |
+| Seller | seller@test.com  | 00000000 |
+| Admin  | admin@test.com   | 00000000 |
 
-User : user@test.com         Password = 00000000
-Seller : seller@test.com     Password = 00000000 
-Admin : admin@test.com       Password = 00000000
-Web Site Link : https://lightgray-chinchilla-755244.hostingersite.com/
-Admin Panel Link : https://lightgray-chinchilla-755244.hostingersite.com/admin/login
+Website: https://lightgray-chinchilla-755244.hostingersite.com/
+Admin Panel: https://lightgray-chinchilla-755244.hostingersite.com/admin/login
+
 

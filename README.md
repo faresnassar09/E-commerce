@@ -26,7 +26,7 @@ See `/docs/screenshots/` for flows (cart, checkout, seller dashboard, tickets, e
 - PHP 8.2+, Composer
 - MySQL
 
-### Installation
+### Installationb & Using
 ```bash
 cp .env.example .env
 # fill DB_*, MAIL_*, STRIPE_* keys
@@ -37,6 +37,7 @@ php artisan storage:link
 php artisan serve
 
 Ready-to-use emails
+
 User : user@test.com
 Seller : seller@test.com
 Admin : admin@test.com

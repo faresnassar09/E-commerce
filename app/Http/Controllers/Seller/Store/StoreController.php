@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Seller\Store;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Stores\EditStoreRequest;
 use App\Http\Requests\Stores\StoreRequest;
-use App\Models\store\Store;
+use App\Models\Store\Store;
 use App\Facades\AuthSeller;
 use App\Services\FileServices;
 use App\Services\Seller\LoggingService;

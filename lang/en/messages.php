@@ -7,7 +7,7 @@ return [
     'store' => 'Store',
     'details' => 'Details',
     'view_store' => 'View Store',
-    'rights' => '2023 All Rights Reserved',
+    'rights' => '2025 All Rights Reserved Fares Nassar',
     'privacy' => 'Privacy Policy',
     'terms' => 'Terms and Conditions',
     'failed' => 'Failed',

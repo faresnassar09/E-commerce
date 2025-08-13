@@ -78,11 +78,11 @@
     @endif
 
         <div class="md:w-1/2">
-            <p class="text-lg font-semibold mb-2">💰 {{ __('messages.price') }}: <span class="text-green-600">{{ $product['price'] }} {{ __('messages.currency') }}</span></p>
+            <p class="text-lg font-semibold mb-2">💰 {{ __('messages.price') }}: <span class="text-green-600">{{ $product['price'] }} {{ __('messages.aed') }}</span></p>
             @if($product['discount'] > 0)
                 <p class="text-lg font-semibold text-red-500">
                     🔻 {{ __('messages.discount') }}: <span class="line-through text-gray-500">{{ $product['price'] }}</span>
-                    {{ __('messages.now_at') }} {{ $product['price'] - $product['discount'] }} {{ __('messages.currency') }}
+                    {{ __('messages.now_at') }} {{ $product['price'] - $product['discount'] }} {{ __('messages.aed') }}
                 </p>
             @endif
             <p class="text-md mt-2">📦 {{ __('messages.available_quantity') }}: <strong>{{ $product['available_quantity'] }}</strong></p>

@@ -110,7 +110,7 @@ return [
     'area' => 'المنطقة',
     'street' => 'الشارع',
     'price' => 'السعر',
-    'currency' => 'درهم',
+    'currency' => 'EG',
     'discount' => 'الخصم',
     'now_at' => 'الآن بـ',
     'available_quantity' => 'الكمية المتاحة',

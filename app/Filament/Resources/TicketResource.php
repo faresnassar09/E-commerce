@@ -3,15 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TicketResource\Pages;
-use App\Filament\Resources\TicketResource\RelationManagers;
 use App\Models\Support\Ticket;
-use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -101,7 +97,7 @@ return false;
     {
         return [
             'index' => Pages\ListTickets::route('/'),
-            'view' => Pages\View::route('/{record}/view'),
+            'view' => Pages\view::route('/{record}/view'),
         ];
     }
 }

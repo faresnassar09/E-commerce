@@ -121,7 +121,7 @@ return [
     'area' => 'Area',
     'street' => 'Street',
     'price' => 'Price',
-    'currency' => 'AED',
+    'currency' => '$',
     'discount' => 'Discount',
     'now_at' => 'Now at',
     'available_quantity' => 'Available Quantity',

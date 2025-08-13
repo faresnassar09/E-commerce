@@ -13,7 +13,7 @@
                 
                 <div class="mt-1 text-center">
                     @if($product->discount > 0)
-                        <span class="text-gray-500 line-through text-sm block">{{ $product->price }} {{__('messages.currency')}}</span>
+                        <span class="text-gray-500 line-through text-sm block">{{ $product->price }} {{__('messages.aed')}}</span>
                     @endif
                     <span class="text-black font-semibold text-sm">{{ $product->price - $product->discount }} {{__('messages.currency')}}</span>
                 </div>

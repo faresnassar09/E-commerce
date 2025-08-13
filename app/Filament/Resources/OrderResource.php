@@ -3,10 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
-use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order\Order;
-use Dom\Text;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -16,9 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class OrderResource extends Resource
 {
@@ -100,7 +95,7 @@ class OrderResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\viewAction::make(),
+                Tables\Actions\ViewAction::make(),
             
                 Tables\Actions\Action::make('toggleStatus')
                     ->label(fn ($record) => $record->status === 2 ? 'Canceled' : 'Cancel')

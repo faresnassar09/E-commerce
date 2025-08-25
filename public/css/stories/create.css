@@ -1,0 +1,66 @@
+body.create-store {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
+    margin: 0;
+    padding: 0;
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+}
+
+.create-store .form-container {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px 40px;
+    width: 400px;
+    text-align: center;
+}
+
+.create-store .form-container h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.create-store .form-container label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.create-store .form-container input[type="text"],
+.create-store .form-container textarea,
+.create-store .form-container input[type="file"] {
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.create-store .form-container textarea {
+    resize: none;
+    height: 100px;
+}
+
+.create-store .form-container button {
+    margin-top: 20px;
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.create-store .form-container button:hover {
+    background: #45a049;
+}

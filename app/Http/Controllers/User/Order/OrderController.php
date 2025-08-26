@@ -11,6 +11,7 @@ use App\Services\User\OrderService;
 use App\Services\NotificationService;
 use App\Services\User\LoggingService;
 use Illuminate\Support\Facades\Gate;
+use App\Enums\OrderStatus;
 
 class OrderController extends Controller
 {
@@ -27,7 +28,7 @@ class OrderController extends Controller
   public function index()
   {
 
-    $orders = $this->orderService->getOrders(status: 0);
+    $orders = $this->orderService->getOrders(OrderStatus::Preparing->value);
 
     return view('users.orders.current', compact('orders'));
   }
@@ -39,7 +40,7 @@ class OrderController extends Controller
       
       Gate::authorize('cancel', $order);
 
-      $this->orderService->changeOrderStatus($order,2);
+      $this->orderService->changeOrderStatus($order,OrderStatus::Canceled->value);
 
     $orderDetails = $order->load('items.product.seller','user');
 
@@ -47,8 +48,8 @@ class OrderController extends Controller
       
       $orderDetails->seller,
       Auth::user()->name,
-      'الغاء اوردر',
-      'بالغاء طلب'
+      __('messages.order '.'messages.cancel'),
+      __('messages.canceled_orders_title')
     );
 
     $this->emailService->sendOrderUserTrakingMail(
@@ -90,7 +91,7 @@ class OrderController extends Controller
   public function getcancelledOrdes()
   {
 
-    $canceledOrders = $this->orderService->getOrders(2);
+    $canceledOrders = $this->orderService->getOrders(OrderStatus::Canceled->value);
 
 
     return view('users.orders.canceled', compact('canceledOrders'));
@@ -99,7 +100,7 @@ class OrderController extends Controller
   public function getDeliveredOrders()
   {
 
-    $orders = $this->orderService->getOrders(1);
+    $orders = $this->orderService->getOrders(OrderStatus::Delivered->value);
 
     return view('users.orders.delivered', compact('orders'));
   }
@@ -113,7 +114,7 @@ class OrderController extends Controller
 
     Gate::authorize('returnOrder', $order);
 
-    $this->orderService->changeOrderStatus($order, 3);
+    $this->orderService->changeOrderStatus($order, OrderStatus::ReturnRequest->value);
 
     if ($request->reason) {
 
@@ -123,8 +124,8 @@ class OrderController extends Controller
     $this->notificationService->notifySellerOfOrderTracking(
       $order->seller,
       $order->user->name,
-      'طلب ارجاع',
-      ' بطلب  ارجاع  أوردر. راجع صفحة الطلبات المرتجعات.'
+      __('messages.status_pending_return'),
+     __('messages.check_order_requests')
     );
 
     

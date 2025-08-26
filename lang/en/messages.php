@@ -96,6 +96,7 @@ return [
     'status_pending_return' => 'Return request under review',
     'status_return_rejected' => 'Return request rejected',
     'status_return_accepted' => 'Return accepted',
+    'check_order_requests' => 'Return request recived check it',
     'status_unknown' => 'Unknown status',
     'no_return_requests_yet' => 'No return requests found.',
 
@@ -355,4 +356,13 @@ return [
     'save_changes' => 'Save Changes',
     'reset' => 'Reset',
     'profile_page_title' =>  'Edit Profile',
+    'uncorrect_email_or_password' => 'Uncorrect email or password',
+
+
+    'complaint_saved' => "Your complaint has been received, we'll reply soon",
+    'save_complaint_failed' => 'Unexpected error occurred while saving ticket',
+    'complaint_reply_saved' => 'Your reply has been successfully received',
+    'save_complaint_reply_failed' => 'Unexpected error occurred while saving ticket reply',
+    'complaint_closed_successfully' => 'Complaint has been closed successfully',
+    'complaint_close_failed' => 'Error occurred while deleting complaint ticket',
 ];

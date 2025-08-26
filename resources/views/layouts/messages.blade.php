@@ -3,9 +3,9 @@
 <script>
     Swal.fire({
         icon: 'success',
-        title: 'نجاح 🎉',
+        title: 'success 🎉',
         text: '{{ session('success') }}',
-        confirmButtonText: 'تم',
+        confirmButtonText: 'okay',
         confirmButtonColor: '#3085d6',
         timer: 3000,
         timerProgressBar: true
@@ -16,10 +16,10 @@
 @if(session('failed'))
 <script>
     Swal.fire({
-        title: 'حدث خطأ 😓',
+        title: ' error  😓',
         text: '{{ session('failed') }}',
         icon: 'error',
-        confirmButtonText: 'فهمت',
+        confirmButtonText: 'okay',
         confirmButtonColor: '#e3342f',
         background: '#1f1f1f',
         color: '#fff',

@@ -55,7 +55,7 @@ class ComplaintController extends Controller
                 $this->complaintService->insertImages($ticket, $imagesPaths);
             }
 
-            return back()->with('success', "your complaint has been recived we'll replay soon");
+            return back()->with('success', __('messages.complaint_saved'));
         } catch (\Exception $e) {
 
             $this->loggingService->failed('Unexpected error occurred while saving ticket', [
@@ -63,7 +63,7 @@ class ComplaintController extends Controller
                 'exception_details' => $e->getMessage(),
             ]);
 
-            return back()->with('failed', "Unexpected error occurred while saving ticket");
+            return back()->with('failed', __('messages.save_complaint_failed'));
         }
     }
 
@@ -104,7 +104,7 @@ class ComplaintController extends Controller
                 'reply_subject' => $reply->subject
             ]);
 
-            return back()->with('success', 'your reply has been succeesfully recived');
+            return back()->with('success', __('messages.complaint_reply_saved'));
 
         } catch (\Exception $e) {
 
@@ -113,7 +113,7 @@ class ComplaintController extends Controller
                 'exception_details' => $e->getMessage(),
             ]);
 
-            return back()->with('failed', "Unexpected error occurred while saving ticket reply");
+            return back()->with('failed',__('messages.save_complaint_reply_failed'));
         }
     }
 
@@ -143,7 +143,7 @@ try {
             'ticket_title' => $ticket->subject,
         ]);
 
-        return back()->with('success', 'the ticket has been colsed successfully');
+        return back()->with('success', __('messages.complaint_closed_successfully'));
 
 } catch (\Exception $e) {
 
@@ -152,6 +152,8 @@ try {
         'ticket_title' => $ticket->subject,
         'exception_details' => $e->getMessage(),
     ]);
+
+    return back()->with('failed', __('messages.complaint_close_failed'));
 
 }
 

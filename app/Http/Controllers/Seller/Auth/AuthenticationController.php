@@ -27,11 +27,11 @@ if(Auth::guard('seller')->attempt($request->only(['email','password']))){
 
     return to_route('seller.dashboard');
 
-}else{
-
-   return back()->with('failed','error occurred while logging in ');
-
 }
+
+   return back()->with('failed',__('messages.uncorrect_email_or_password'));
+
+
 
 }
 

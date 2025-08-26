@@ -7,7 +7,7 @@ use App\Services\EmailService;
 use App\Services\Seller\LoggingService;
 use App\Services\Seller\OrderService;
 use Livewire\Component;
-
+use App\Enums\OrderStatus;
 
 class ChangeOrderStatus extends Component
 {
@@ -43,14 +43,14 @@ class ChangeOrderStatus extends Component
 
         switch ($status) {
 
-            case 0:
+            case OrderStatus::Preparing->value:
                 $status = __('notifications.order_preparing');
 
                 break;
 
-            case 1:
+            case OrderStatus::Delivered->value:
 
-                $status = 'تم نقل الطلب لخانة الطلبات الموصلة';
+                $status = __('messages.order_delivered_heading');
 
                 app(EmailService::class)->SendOrderSellerTrakingMail(
                     AuthSeller::fullInfo(),
@@ -67,7 +67,7 @@ class ChangeOrderStatus extends Component
                 );
                 break;
 
-            case 2:
+            case OrderStatus::Canceled->value:
 
                 $status = __('notifications.order_canceled');
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Enums\OrderStatus;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -29,7 +30,7 @@ class OrderService
 
     $order->update(['status' => $status]);
 
-    if ($status == 2) {
+    if ($status == OrderStatus::Canceled->value) {
 
       $order->update(['canceled_at' => now()]);
     }
@@ -54,7 +55,11 @@ class OrderService
 
     return Auth::user()
     ->orders()
-    ->whereIn('status', [3, 4, 5])
+    ->whereIn('status', [
+      OrderStatus::ReturnRequest->value,
+      OrderStatus::ReturnRejected->value,
+      OrderStatus::ReturnAccepted->value])
+      
     ->orderBy('updated_at', 'desc')
     ->with(
 

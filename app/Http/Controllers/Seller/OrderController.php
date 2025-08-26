@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Enums\OrderStatus;
 use App\Facades\AuthSeller;
 use App\Http\Controllers\Controller;
 use App\Models\Order\Order;
@@ -24,7 +25,7 @@ class OrderController extends Controller
     ) {}
     public function incoming()
     {
-        $orders = $this->orderService->getOrders('created_at', 0);
+        $orders = $this->orderService->getOrders('created_at', OrderStatus::Preparing->value);
 
         return view('sellers.orders.incoming', compact('orders'));
     }
@@ -32,7 +33,7 @@ class OrderController extends Controller
     public function getDeliveredOrders()
     {
 
-        $orders = $this->orderService->getOrders('updated_at', 1);
+        $orders = $this->orderService->getOrders('updated_at', OrderStatus::Delivered->value);
 
         return view('sellers.orders.delivered', compact('orders'));
     }
@@ -40,7 +41,7 @@ class OrderController extends Controller
     public function getCanceledOrders()
     {
 
-        $canceledOrders = $this->orderService->getOrders('cancelled_at', 2);
+        $canceledOrders = $this->orderService->getOrders('cancelled_at', OrderStatus::Canceled->value);
 
         return view('sellers.orders.canceled', compact('canceledOrders'));
     }
@@ -48,7 +49,7 @@ class OrderController extends Controller
     public function getReturnRequests()
     {
 
-        $orders = $this->orderService->getOrders('updated_at', 3);
+        $orders = $this->orderService->getOrders('updated_at', OrderStatus::ReturnRequest->value);
 
         return view('sellers.orders.return-requests', compact('orders'));
     }
@@ -60,7 +61,7 @@ class OrderController extends Controller
 
         Gate::forUser(AuthSeller::fullInfo())->authorize('sellerCanAcceptReturn',$order);
         
-        $this->orderService->changeOrderStatus($order,5);
+        $this->orderService->changeOrderStatus($order,OrderStatus::ReturnAccepted->value);
 
         $sellerPhone = $order->seller->phone_numbers;
 
@@ -109,7 +110,7 @@ try {
     
         Gate::forUser(AuthSeller::fullInfo())->authorize('sellerCanAcceptReturn',$order);
 
-        $this->orderService->changeOrderStatus($order,4);
+        $this->orderService->changeOrderStatus($order,OrderStatus::ReturnRejected->value);
 
         $orderDetails = $order->load('items.product');
 

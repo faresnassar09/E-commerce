@@ -79,6 +79,7 @@ return [
     'delivered_order_message' => 'تم توصيل هذا الطلب بنجاح للعميل. لا توجد إجراءات أخرى مطلوبة.',
     'no_delivered_orders_yet' => 'لا توجد طلبات مُوصلة حالياً.',
     'return_requests_title' => 'طلبات الاسترجاع',
+    'check_order_requests' => 'وصلك طلب ارجاع تحقق منه',
     'order_number' => 'طلب رقم',
     'delivered_on' => 'تم التوصيل بتاريخ',
     'not_available' => 'غير متوفر',
@@ -340,5 +341,13 @@ return [
     'save_changes' => 'حفظ التعديلات',
     'reset' => 'إعادة تعيين',
     'profile_page_title' => 'تعديل الملف الشخصي',
-    
+    'uncorrect_email_or_password' => 'الايميل او الباسوورد خطاء',
+
+    'complaint_saved' => "تم استلام شكواك، سنرد عليك قريبًا",
+    'save_complaint_failed' => "حدث خطأ غير متوقع أثناء حفظ الشكوى",
+    'complaint_reply_saved' => "تم استلام ردك بنجاح",
+    'save_complaint_reply_failed' => "حدث خطأ غير متوقع أثناء حفظ رد الشكوى",
+    'complaint_closed_successfully' => "تم إغلاق الشكوى بنجاح",
+    'complaint_close_failed' => "حدث خطأ أثناء حذف الشكوى",
+
 ];

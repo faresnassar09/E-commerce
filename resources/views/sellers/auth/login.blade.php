@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html >
 <head>
@@ -10,6 +12,7 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
         <h2 class="text-xl font-bold text-center text-gray-800 mb-4">{{__('messages.sign_in')}}</h2>
+        @include('layouts.messages')
 
         <form action="{{ route('auth.seller.login.submit') }}" method="POST" class="space-y-3">
             @csrf
@@ -43,12 +46,6 @@
         </form>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            setTimeout(() => {
-                document.querySelectorAll(".text-red-500").forEach(el => el.style.display = "none");
-            }, 5000);
-        });
-    </script>
+
 </body>
 </html>

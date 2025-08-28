@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seller\Product;
 
+use App\Enums\CacheKeys;
 use App\Facades\AuthSeller;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Products\ProductRequest;
@@ -11,6 +12,7 @@ use App\Services\FileServices;
 use App\Services\Seller\LoggingService;
 use App\Services\Seller\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller

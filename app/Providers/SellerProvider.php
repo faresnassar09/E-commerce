@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Models\Product\Product;
+use App\Models\Store\Store;
+use App\Observers\Seller\ProductObserver;
+use App\Observers\Seller\StoreObserver;
 use App\Services\Seller\AuthSeller;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\ServiceProvider;
 
 class SellerProvider extends ServiceProvider
 {
@@ -18,10 +21,20 @@ class SellerProvider extends ServiceProvider
             return new AuthSeller();
         });
     
-        $this->app->alias(AuthSeller::class,'AuthSeller');    }  
+        $this->app->alias(AuthSeller::class,'AuthSeller'); 
+    
+    }  
+
+
 
    public function boot(): void
+
     {
+
+        Product::observe(ProductObserver::class);
+        Store::observe(StoreObserver::class);
+
+
 
 }
    }  

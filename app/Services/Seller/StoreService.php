@@ -2,17 +2,20 @@
 
 namespace App\Services\Seller;
 
+use App\Enums\CacheKeys;
 use App\Facades\AuthSeller;
 
 class StoreService
 {
 
+    public function __construct(public CacheService $cacheService){}
+
     public function getStores()
     {
 
-        return  AuthSeller::fullInfo()
-        ->stores()
-        ->with('images', 'city', 'area')->get();
+        return $this->cacheService->getCachedStores(CacheKeys::SellerStores->value);
+
+
     }
 
 
@@ -85,7 +88,7 @@ class StoreService
     public function storeNotFound()
     {
 
-        return back()->with('failed', 'لقد حدث خطاء حاول مرة اخري');
+        return back()->with('failed', __('messages.error_occurred'));
     }
 
     public function insertImages($store, $imagesPaths)

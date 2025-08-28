@@ -2,10 +2,9 @@
 
 namespace App\Services\Seller;
 
-use App\Models\Seller\Seller;
 use Illuminate\Auth\AuthManager;
-use Illuminate\Log\LogManager;
 
+use App\Enums\CacheKeys;
 
 class AuthSeller
 {
@@ -71,10 +70,6 @@ class AuthSeller
     }
 
  
-    public function deleteCache($key)
-    {
 
-        app('cache')->forget($key);
-    }
 }
 

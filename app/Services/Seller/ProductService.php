@@ -2,6 +2,7 @@
 
 namespace App\Services\Seller;
 
+use App\Enums\CacheKeys;
 use App\Facades\AuthSeller;
 use App\Models\Category;
 use Illuminate\Support\Facades\Cache;
@@ -10,11 +11,13 @@ use Illuminate\Support\Facades\Cache;
 class ProductService
 {
 
+    public function __construct(public CacheService $cacheService){}
 
     public function getProducts()
     {
 
-        return AuthSeller::fullInfo()->products()->with('images')->paginate(12);
+        return $this->cacheService->getcachedProducts();
+
     }
 
     public function createProduct($data)

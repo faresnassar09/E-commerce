@@ -349,5 +349,6 @@ return [
     'save_complaint_reply_failed' => "حدث خطأ غير متوقع أثناء حفظ رد الشكوى",
     'complaint_closed_successfully' => "تم إغلاق الشكوى بنجاح",
     'complaint_close_failed' => "حدث خطأ أثناء حذف الشكوى",
+    'error_occurred' => 'حدث خطاء حاول مره اخري',
 
 ];

@@ -365,4 +365,5 @@ return [
     'save_complaint_reply_failed' => 'Unexpected error occurred while saving ticket reply',
     'complaint_closed_successfully' => 'Complaint has been closed successfully',
     'complaint_close_failed' => 'Error occurred while deleting complaint ticket',
+    'error_occurred' => 'Error Occurred Try Again',
 ];
